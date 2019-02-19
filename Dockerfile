@@ -1,1 +1,1 @@
-FROM stage-2
+FROM stage-3
