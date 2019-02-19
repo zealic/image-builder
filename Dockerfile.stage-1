@@ -1,0 +1,23 @@
+ARG INST_DIR=/mnt/debinst
+ARG MIRROR_HOST=http://deb.debian.org/debian/
+
+# stage-1
+FROM debian:9-slim
+
+# Env variables
+ARG INST_DIR
+ARG MIRROR_HOST
+ENV INST_DIR=${INST_DIR}
+ENV MIRROR_HOST=${MIRROR_HOST}
+
+# Build deps
+ENV DEBIAN_FRONTEND=noninteractive
+RUN export DEPS="debootstrap grub2 grub-pc-bin qemu-utils parted uuid-runtime" \
+  && apt-get update && apt-get install -yq ${DEPS} \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Minbase install
+RUN debootstrap --arch=amd64 --foreign --variant=minbase \
+    stretch ${INST_DIR} ${MIRROR_HOST}
+
+COPY scripts/debian/* /scripts/
