@@ -1,6 +1,7 @@
-IMAGE_NAME=dmg
+IMAGE_NAME=cloud-image-builder
 
-scripts:=$(shell find scripts -type file -name '*.sh')
+stage2_scripts:=scripts/debian/stage-2.sh
+stage3_scripts:=$(shell find scripts/debian/configure-* -type file -name '*.sh')
 
 
 shell:
@@ -8,7 +9,10 @@ shell:
 		-v $(PWD):/workspace -v $(PWD)/scripts/debian:/scripts \
 		$(IMAGE_NAME) bash
 
-$(scripts):
+$(stage2_scripts):
+	@: # DO NOTHING
+
+$(stage3_scripts):
 	@: # DO NOTHING
 
 build: .stage-1 .stage-2 .stage-3
@@ -19,7 +23,7 @@ build: .stage-1 .stage-2 .stage-3
 	docker build -f Dockerfile.$(STAGE_NAME) -t $(STAGE_NAME) .
 	touch .$(STAGE_NAME)
 
-.stage-2: .stage-1 Dockerfile.stage-2
+.stage-2: $(stage2_scripts) .stage-1 Dockerfile.stage-2
 	@$(eval STAGE_NAME:=stage-2)
 	@docker rm -f $(STAGE_NAME) 2> /dev/null || true
 	@docker run --name=$(STAGE_NAME) -i --privileged \
@@ -30,7 +34,7 @@ build: .stage-1 .stage-2 .stage-3
 	docker build -f Dockerfile.$(STAGE_NAME) -t $(STAGE_NAME) .
 	@touch .$(STAGE_NAME) # Mark as newer than scripts
 
-.stage-3: $(scripts) .stage-2 Dockerfile.stage-3
+.stage-3: $(stage3_scripts) .stage-2 Dockerfile.stage-3
 	@$(eval STAGE_NAME:=stage-3)
 	@docker rm -f $(STAGE_NAME) 2> /dev/null || true
 	@docker run --name=$(STAGE_NAME) -i --privileged \
