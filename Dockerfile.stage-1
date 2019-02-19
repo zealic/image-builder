@@ -13,7 +13,7 @@ ENV LANG=C.UTF-8
 
 # Build deps
 ENV DEBIAN_FRONTEND=noninteractive
-RUN export DEPS="debootstrap grub2 grub-pc-bin qemu-utils parted uuid-runtime" \
+RUN export DEPS="debootstrap grub2 grub-pc-bin qemu-utils parted uuid-runtime patch linux-image-amd64" \
   && apt-get update && apt-get install -yq ${DEPS} \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 

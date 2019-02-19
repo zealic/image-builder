@@ -4,7 +4,10 @@ scripts:=$(shell find scripts -type file -name '*.sh')
 
 
 shell:
-	@docker run -it --rm --privileged $(IMAGE_NAME) bash
+	@docker run -it --rm --privileged \
+		-v $(PWD):/workspace \
+		-v $(PWD)/grub-probe-hook:/usr/local/sbin/grub-probe \
+		$(IMAGE_NAME) bash
 
 $(scripts):
 	@: # DO NOTHING
