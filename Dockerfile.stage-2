@@ -1,1 +1,2 @@
 FROM stage-1
+COPY scripts/debian/* /scripts/

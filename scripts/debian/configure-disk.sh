@@ -1,8 +1,8 @@
 #!/bin/bash
-INST_DIR=/mnt/debinst
-IMAGE_FILE=main.qcow2
-IMAGE_SIZE=$((1024*1024*1024*10)) # 10G
-SYSIMG_SIZE?=$((4096*512))
+INST_DIR=${INST_DIR:-/mnt/debinst}
+IMAGE_FILE=${IMAGE_SIZE:-disk.qcow2}
+IMAGE_SIZE=${IMAGE_SIZE:-$((1024*1024*1024*10))} # 10G
+SYSIMG_SIZE=${SYSIMG_SIZE:-$((4096*512))}
 
 # Make file system
 qemu-img create -f qcow2 ${IMAGE_FILE} ${IMAGE_SIZE}

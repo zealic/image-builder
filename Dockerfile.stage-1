@@ -19,5 +19,3 @@ RUN export DEPS="debootstrap grub2 grub-pc-bin qemu-utils parted uuid-runtime" \
 # Minbase install
 RUN debootstrap --arch=amd64 --foreign --variant=minbase \
     stretch ${INST_DIR} ${MIRROR_HOST}
-
-COPY scripts/debian/* /scripts/
