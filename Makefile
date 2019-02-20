@@ -1,4 +1,4 @@
-IMAGE_NAME=stage-2
+IMAGE_NAME=dmg
 
 common_scripts:=$(shell find scripts/debian/common-* -type file -name '*.sh')
 
