@@ -22,12 +22,12 @@ RUB_TIMEOUT_STYLE=menu
 GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
 GRUB_TERMINAL_INPUT=console
 GRUB_TERMINAL_OUTPUT=console
-GRUB_CMDLINE_LINUX="console=ttyS0,38400n8 elevator=noop scsi_mod.use_blk_mq=Y net.ifnames=0 biosdevname=0"
+GRUB_CMDLINE_LINUX="console=ttyS0,38400n8 elevator=noop scsi_mod.use_blk_mq=Y net.ifnames=0 biosdevname=0 nomodeset"
 EOF
 
 # Fake blkid
 FS_UUID=`blkid -o "export" $LOOP_DEV | grep UUID | cut -c6-`
-mkdir -p $TARGET_DIR/dev/disk/by-uuid/$FS_UUID
+mkdir -p /dev/disk/by-uuid/$FS_UUID
 
 echo 'proc /proc proc defaults 0 0' >  $TARGET_DIR/etc/fstab
 echo "UUID=$FS_UUID / ext4 defaults 1 1" >> $TARGET_DIR/etc/fstab
