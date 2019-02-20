@@ -1,4 +1,2 @@
-dist/
-.stage-*
 *.qcow2
 *.vmdk

@@ -1,5 +1,8 @@
 #!/bin/bash
 INST_DIR=${INST_DIR:-/mnt/debinst}
+ln -sf $NBD_DEV  /dev/xvda
+ln -sf $LOOP_DEV /dev/xvda1
+
 
 #===============================================================================
 # Generate grub.cfg
@@ -14,7 +17,7 @@ echo "" > /etc/grub.d/30_uefi-firmware
 
 cat > /etc/default/grub <<"EOF"
 GRUB_DEFAULT=0
-GRUB_TIMEOUT=0
+GRUB_TIMEOUT=30
 RUB_TIMEOUT_STYLE=menu
 GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
 GRUB_TERMINAL_INPUT=console
@@ -34,9 +37,3 @@ grub-mkconfig -o /grub.cfg
 
 chroot $INST_DIR apt install -y grub-pc
 cp /grub.cfg $INST_DIR/boot/grub
-
-# Install kernel
-LINUX_VERSION=`ls /boot/vmlinuz-* | tail -n1 | awk -F- '{print $2 "-" $3}'`
-chroot $INST_DIR apt install -y --no-install-recommends systemd
-chroot $INST_DIR apt install -y --no-install-recommends linux-image-${LINUX_VERSION}-amd64
-cp -r /usr/lib/grub/i386-pc $INST_DIR/boot/grub/i386-pc

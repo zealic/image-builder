@@ -19,4 +19,5 @@ RUN export DEPS="debootstrap grub-pc qemu-utils parted uuid-runtime patch linux-
 
 # Minbase install
 RUN debootstrap --arch=amd64 --foreign --variant=minbase \
+    --components=main,contrib,nonfree --include=linux-image-amd64,grub-pc \
     stretch ${INST_DIR} ${MIRROR_HOST}
