@@ -26,6 +26,9 @@ EOF
 FS_UUID=`blkid -o "export" $LOOP_DEV | grep UUID | cut -c6-`
 mkdir -p /dev/disk/by-uuid/$FS_UUID
 
+echo 'proc /proc proc defaults 0 0' >  $INST_DIR/etc/fstab
+echo "UUID=$FS_UUID / ext4 defaults 1 1" >> $INST_DIR/etc/fstab
+
 # Generate configuration
 grub-mkconfig -o /grub.cfg
 
@@ -37,16 +40,3 @@ LINUX_VERSION=`ls /boot/vmlinuz-* | tail -n1 | awk -F- '{print $2 "-" $3}'`
 chroot $INST_DIR apt install -y --no-install-recommends systemd
 chroot $INST_DIR apt install -y --no-install-recommends linux-image-${LINUX_VERSION}-amd64
 cp -r /usr/lib/grub/i386-pc $INST_DIR/boot/grub/i386-pc
-
-#===============================================================================
-# Generate MBR
-#===============================================================================
-# Install image
-MODULES="part_msdos part_gpt fat ext2 gzio linux acpi normal \
-    cpio crypto disk boot crc64 \
-    search_fs_uuid verify xzio xfs video"
-grub-mkimage -O i386-pc -p /boot -o core.img ${MODULES}
-# grub-bios-setup
-cp /usr/lib/grub/i386-pc/boot.img /
-dd if=$NBD_DEV of=boot.img skip=446 bs=64 count=1 # copy partitations table
-cat boot.img core.img > system.img
