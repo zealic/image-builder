@@ -17,14 +17,17 @@ losetup -o $SYSIMG_SIZE --sizelimit $((PART_SEC_COUNT*512)) $LOOP_DEV $NBD_DEV
 yes | mkfs.ext4 -U $MAIN_UUID $LOOP_DEV
 
 #===============================================================================
-# Setup second-stage
+# debootstrap install
 #===============================================================================
+# Get linux kernel version from current docker image
+LINUX_VERSION=`ls /boot/vmlinuz-* | tail -n1 | awk -F- '{print $2 "-" $3}'`
+
 mkdir -p $TARGET_DIR
 mount $LOOP_DEV $TARGET_DIR
 debootstrap --arch=amd64 --foreign \
     --variant=minbase \
     --components=main,contrib,nonfree \
-    --include=linux-image-amd64,grub-pc,systemd,systemd-sysv \
+    --include=linux-image-${LINUX_VERSION}-amd64,grub-pc,systemd,systemd-sysv \
     stretch ${TARGET_DIR} ${MIRROR_HOST}
 chroot $TARGET_DIR /debootstrap/debootstrap --second-stage
 chroot $TARGET_DIR apt clean
