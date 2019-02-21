@@ -1,4 +1,6 @@
 dist/
 *.qcow2
 *.vmdk
+*.ova
+*.vmx
 .*

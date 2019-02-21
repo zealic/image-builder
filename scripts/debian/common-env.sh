@@ -33,7 +33,3 @@ fi
 if [[ ! -e $NBD_DEV ]]; then
   mknod $NBD_DEV -m660 b 43 $DEVID
 fi
-
-
-# WORKSPACE
-cd "$WORKSPACE"

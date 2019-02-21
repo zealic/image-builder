@@ -10,9 +10,10 @@ services:
     volumes:
       - $PWD:/workspace
       - $PWD/scripts/debian:/scripts
+    working_dir: /workspace
     command:
       - bash
-      -   /scripts/stage-1.sh
+      -   /scripts/entrypoint.sh stage-1
   stage-2:
     build:
       context: .
@@ -23,9 +24,10 @@ services:
     volumes:
       - $PWD:/workspace
       - $PWD/scripts/debian:/scripts
+    working_dir: /workspace
     command:
       - bash
-      -   /scripts/stage-2.sh
+      -   /scripts/entrypoint.sh stage-2
   stage-3:
     build:
       context: .
@@ -36,9 +38,10 @@ services:
     volumes:
       - $PWD:/workspace
       - $PWD/scripts/debian:/scripts
+    working_dir: /workspace
     command:
       - bash
-      -   /scripts/stage-3.sh
+      -   /scripts/entrypoint.sh stage-3
   stage-end:
     build:
       context: .
@@ -49,6 +52,21 @@ services:
     volumes:
       - $PWD:/workspace
       - $PWD/scripts/debian:/scripts
+    working_dir: /workspace
     command:
       - bash
-      -   /scripts/stage-end.sh
+      -   /scripts/entrypoint.sh stage-end
+  generate-ova:
+    build:
+      context: .
+    privileged: true
+    environment:
+      IMAGE_FILE: disk.qcow2
+    volumes:
+      - $PWD:/workspace
+      - $PWD/scripts/debian:/scripts
+    working_dir: /workspace
+    command:
+      - bash
+      -   /scripts/generate-ova.sh
+      -     Debian
