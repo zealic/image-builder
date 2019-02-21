@@ -1,7 +1,4 @@
 #!/bin/bash
-source /scripts/common-env.sh
-source /scripts/common-snapshot.sh
-source /scripts/common-load.sh
 ln -sf $NBD_DEV  /dev/xvda
 ln -sf $LOOP_DEV /dev/xvda1
 
@@ -31,6 +28,3 @@ GRUB_CMDLINE_LINUX="console=ttyS0,38400n8d console=tty0 consoleblank=0 biosdevna
 EOF
 grub-mkconfig -o $TARGET_DIR/boot/grub/grub.cfg
 grub-install --boot-directory=/mnt/target/boot --modules="part_msdos" /dev/xvda
-
-
-source /scripts/common-clean.sh

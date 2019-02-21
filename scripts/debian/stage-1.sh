@@ -1,6 +1,4 @@
 #!/bin/bash
-source /scripts/common-env.sh
-
 #===============================================================================
 # Make image
 #===============================================================================
@@ -31,5 +29,3 @@ debootstrap --arch=amd64 --foreign \
     stretch ${TARGET_DIR} ${MIRROR_HOST}
 chroot $TARGET_DIR /debootstrap/debootstrap --second-stage
 chroot $TARGET_DIR apt clean
-
-source /scripts/common-clean.sh

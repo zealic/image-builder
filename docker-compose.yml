@@ -7,13 +7,14 @@ services:
     environment:
       MIRROR_HOST: http://mirrors.ustc.edu.cn/debian/
       IMAGE_FILE: disk.stage-1.qcow2
+      STAGE_NAME: stage-1
     volumes:
       - $PWD:/workspace
       - $PWD/scripts/debian:/scripts
     working_dir: /workspace
     command:
       - bash
-      -   /scripts/entrypoint.sh stage-1
+      -   /scripts/entrypoint.sh
   stage-2:
     build:
       context: .
@@ -21,13 +22,14 @@ services:
     environment:
       BASE_IMAGE: disk.stage-1.qcow2
       IMAGE_FILE: disk.stage-2.qcow2
+      STAGE_NAME: stage-2
     volumes:
       - $PWD:/workspace
       - $PWD/scripts/debian:/scripts
     working_dir: /workspace
     command:
       - bash
-      -   /scripts/entrypoint.sh stage-2
+      -   /scripts/entrypoint.sh
   stage-3:
     build:
       context: .
@@ -35,13 +37,14 @@ services:
     environment:
       BASE_IMAGE: disk.stage-2.qcow2
       IMAGE_FILE: disk.stage-3.qcow2
+      STAGE_NAME: stage-3
     volumes:
       - $PWD:/workspace
       - $PWD/scripts/debian:/scripts
     working_dir: /workspace
     command:
       - bash
-      -   /scripts/entrypoint.sh stage-3
+      -   /scripts/entrypoint.sh
   stage-end:
     build:
       context: .
@@ -49,13 +52,14 @@ services:
     environment:
       BASE_IMAGE: disk.stage-3.qcow2
       IMAGE_FILE: disk.qcow2
+      STAGE_NAME: stage-end
     volumes:
       - $PWD:/workspace
       - $PWD/scripts/debian:/scripts
     working_dir: /workspace
     command:
       - bash
-      -   /scripts/entrypoint.sh stage-end
+      -   /scripts/entrypoint.sh
   generate-ova:
     build:
       context: .
