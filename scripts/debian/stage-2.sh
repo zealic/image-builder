@@ -17,12 +17,11 @@ chmod +x /usr/sbin/grub-probe
 echo "" > /etc/grub.d/30_uefi-firmware
 
 # Fake blkid, grub-mkconfig setroot need this
-FS_UUID=`blkid -o "export" $LOOP_DEV | grep UUID | cut -c6-`
-mkdir -p /dev/disk/by-uuid/$FS_UUID
+mkdir -p /dev/disk/by-uuid/$MAIN_UUID
 
 # Setup mount table
 echo 'proc /proc proc defaults 0 0' >  $TARGET_DIR/etc/fstab
-echo "UUID=$FS_UUID / ext4 defaults 1 1" >> $TARGET_DIR/etc/fstab
+echo "UUID=$MAIN_UUID / ext4 defaults 1 1" >> $TARGET_DIR/etc/fstab
 
 # Generate
 cat > /etc/default/grub <<"EOF"

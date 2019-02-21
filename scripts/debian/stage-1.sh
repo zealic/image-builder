@@ -27,5 +27,6 @@ debootstrap --arch=amd64 --foreign \
     --include=linux-image-amd64,grub-pc,systemd,systemd-sysv \
     stretch ${TARGET_DIR} ${MIRROR_HOST}
 chroot $TARGET_DIR /debootstrap/debootstrap --second-stage
+chroot $TARGET_DIR apt clean
 
 source /scripts/common-clean.sh
