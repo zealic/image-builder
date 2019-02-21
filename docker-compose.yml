@@ -26,12 +26,25 @@ services:
     command:
       - bash
       -   /scripts/stage-2.sh
-  stage-end:
+  stage-3:
     build:
       context: .
     privileged: true
     environment:
       BASE_IMAGE: disk.stage-2.qcow2
+      IMAGE_FILE: disk.stage-3.qcow2
+    volumes:
+      - $PWD:/workspace
+      - $PWD/scripts/debian:/scripts
+    command:
+      - bash
+      -   /scripts/stage-3.sh
+  stage-end:
+    build:
+      context: .
+    privileged: true
+    environment:
+      BASE_IMAGE: disk.stage-3.qcow2
       IMAGE_FILE: disk.qcow2
     volumes:
       - $PWD:/workspace

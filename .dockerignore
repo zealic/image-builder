@@ -1,3 +1,4 @@
 dist/
 *.qcow2
 *.vmdk
+.*

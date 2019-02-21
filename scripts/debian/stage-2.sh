@@ -19,10 +19,6 @@ echo "" > /etc/grub.d/30_uefi-firmware
 # Fake blkid, grub-mkconfig setroot need this
 mkdir -p /dev/disk/by-uuid/$MAIN_UUID
 
-# Setup mount table
-echo 'proc /proc proc defaults 0 0' >  $TARGET_DIR/etc/fstab
-echo "UUID=$MAIN_UUID / ext4 defaults 1 1" >> $TARGET_DIR/etc/fstab
-
 # Generate
 cat > /etc/default/grub <<"EOF"
 GRUB_DEFAULT=0

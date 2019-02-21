@@ -1,22 +1,21 @@
 #!/bin/bash
 export LANG=C.UTF-8
 MIRROR_HOST=${MIRROR_HOST:-http://deb.debian.org/debian/}
+# Directory
+WORKSPACE=/workspace
+TARGET_DIR=/mnt/target
 
 # Disk info
 IMAGE_FILE=${IMAGE_FILE:-disk.qcow2}
 IMAGE_SIZE=${IMAGE_SIZE:-$((1024*1024*1024*10))} # 10G
 SYSIMG_SIZE=${SYSIMG_SIZE:-$((4096*512))}
 get_uuid() {
-  if [[ ! -e /.uuid ]]; then
-    uuidgen > /.uuid
+  if [[ ! -e $WORKSPACE/.uuid ]]; then
+    uuidgen > $WORKSPACE/.uuid
   fi
-  cat /.uuid
+  cat $WORKSPACE/.uuid
 }
 MAIN_UUID=`get_uuid`
-
-# Directory
-WORKSPACE=/workspace
-TARGET_DIR=/mnt/target
 
 # Device
 DEVID=${DEVID:-7}
