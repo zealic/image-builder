@@ -1,0 +1,41 @@
+version: "2.4"
+services:
+  stage-1:
+    build:
+      context: .
+    privileged: true
+    environment:
+      MIRROR_HOST: http://mirrors.ustc.edu.cn/debian/
+      IMAGE_FILE: disk.stage-1.qcow2
+    volumes:
+      - $PWD:/workspace
+      - $PWD/scripts/debian:/scripts
+    command:
+      - bash
+      -   /scripts/stage-1.sh
+  stage-2:
+    build:
+      context: .
+    privileged: true
+    environment:
+      BASE_IMAGE: disk.stage-1.qcow2
+      IMAGE_FILE: disk.stage-2.qcow2
+    volumes:
+      - $PWD:/workspace
+      - $PWD/scripts/debian:/scripts
+    command:
+      - bash
+      -   /scripts/stage-2.sh
+  stage-end:
+    build:
+      context: .
+    privileged: true
+    environment:
+      BASE_IMAGE: disk.stage-2.qcow2
+      IMAGE_FILE: disk.qcow2
+    volumes:
+      - $PWD:/workspace
+      - $PWD/scripts/debian:/scripts
+    command:
+      - bash
+      -   /scripts/stage-end.sh
