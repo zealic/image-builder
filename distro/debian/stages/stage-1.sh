@@ -17,6 +17,7 @@ yes | mkfs.ext4 -U $MAIN_UUID $LOOP_DEV
 #===============================================================================
 # debootstrap install
 #===============================================================================
+set -e
 # Get linux kernel version from current docker image
 LINUX_VERSION=`ls /boot/vmlinuz-* | tail -n1 | awk -F- '{print $2 "-" $3}'`
 
@@ -25,7 +26,7 @@ mount $LOOP_DEV $TARGET_DIR
 debootstrap --arch=amd64 --foreign \
     --variant=minbase \
     --components=main,contrib,nonfree \
-    --include=linux-image-${LINUX_VERSION}-amd64,grub-pc,systemd,systemd-sysv \
-    stretch ${TARGET_DIR} ${MIRROR_HOST}
+    --include=linux-image-${LINUX_VERSION}-amd64,grub-pc \
+    stretch ${TARGET_DIR} http://${MIRROR_HOST}/debian
 chroot $TARGET_DIR /debootstrap/debootstrap --second-stage
 chroot $TARGET_DIR apt clean

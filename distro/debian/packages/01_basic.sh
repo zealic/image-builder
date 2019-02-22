@@ -1,6 +1,6 @@
 apt-get update
 apt-get install -yq \
-  sudo coreutils binutils \
+  sudo coreutils binutils systemd \
   ethtool ifupdown iptables iproute2 net-tools iputils-ping \
   curl \
   git openssh-server
