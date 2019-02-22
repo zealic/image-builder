@@ -1,8 +1,8 @@
 apt-get update
 apt-get install -yq \
-  sudo coreutils binutils systemd \
+  sudo coreutils binutils e2fsprogs systemd systemd-sysv \
   ethtool ifupdown iptables iproute2 net-tools iputils-ping \
-  curl \
+  curl vim \
   git openssh-server
 
 cat >> /etc/network/interfaces <<EOF

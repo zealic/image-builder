@@ -39,7 +39,7 @@ cat >> $FILE_DISTRO <<EOF
     chroot: false
     items:
 EOF
-find distro/${DISTRO_NAME}/stages -type file -name 'stage-*.sh' \
+find distro/${DISTRO_NAME}/stages -type file -name '*.sh' \
   | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}' >> $FILE_DISTRO
 
 # packages
