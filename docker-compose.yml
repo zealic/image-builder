@@ -10,7 +10,7 @@ services:
       MIRROR_HOST: http://mirrors.ustc.edu.cn/debian/
     volumes:
       - $PWD/.disks:/workspace
-      - $PWD/scripts/debian:/scripts:ro
+      - $PWD/scripts:/scripts:ro
     working_dir: /workspace
     command:
       - bash
