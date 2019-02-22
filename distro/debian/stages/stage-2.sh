@@ -7,7 +7,31 @@ ln -sf $LOOP_DEV /dev/xvda1
 #===============================================================================
 # Hook grub-probe to generate args
 mv /usr/sbin/grub-probe /tmp/grub-probe
-cp /scripts/grub-probe-hook /usr/sbin/grub-probe
+cat > /usr/sbin/grub-probe <<"EOF"
+#!/bin/bash
+XVDAP1=/dev/xvda1
+if [[ "$1" == '--device' ]] && [[ "$2" == "$XVDAP1" ]]; then
+  case x"$3" in
+    x--target=partmap)
+      echo "msdos"
+      exit 0;;
+  esac
+  :
+fi
+
+if [[ "$1" == '--target=device' ]]; then
+  case x"$2" in
+    x/)
+      echo "$XVDAP1"
+      exit 0;;
+    x/boot)
+      echo "$XVDAP1"
+      exit 0;;
+  esac
+fi
+
+exec /tmp/grub-probe $@
+EOF
 chmod +x /usr/sbin/grub-probe
 
 # Disable UEFT: /etc/grub.d/30_uefi-firmware
