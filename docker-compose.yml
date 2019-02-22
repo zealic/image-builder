@@ -1,75 +1,42 @@
 version: "2.4"
 services:
-  stage-1:
+  stage-1: &base
     build:
       context: .
     privileged: true
     environment:
-      MIRROR_HOST: http://mirrors.ustc.edu.cn/debian/
-      IMAGE_FILE: disk.stage-1.qcow2
       STAGE_NAME: stage-1
+      IMAGE_FILE: disk.stage-1.qcow2
+      MIRROR_HOST: http://mirrors.ustc.edu.cn/debian/
     volumes:
-      - $PWD:/workspace
-      - $PWD/scripts/debian:/scripts
+      - $PWD/.disks:/workspace
+      - $PWD/scripts/debian:/scripts:ro
     working_dir: /workspace
     command:
       - bash
       -   /scripts/entrypoint.sh
   stage-2:
-    build:
-      context: .
-    privileged: true
+    <<: *base
     environment:
+      STAGE_NAME: stage-2
       BASE_IMAGE: disk.stage-1.qcow2
       IMAGE_FILE: disk.stage-2.qcow2
-      STAGE_NAME: stage-2
-    volumes:
-      - $PWD:/workspace
-      - $PWD/scripts/debian:/scripts
-    working_dir: /workspace
-    command:
-      - bash
-      -   /scripts/entrypoint.sh
   stage-3:
-    build:
-      context: .
-    privileged: true
+    <<: *base
     environment:
+      STAGE_NAME: stage-3
       BASE_IMAGE: disk.stage-2.qcow2
       IMAGE_FILE: disk.stage-3.qcow2
-      STAGE_NAME: stage-3
-    volumes:
-      - $PWD:/workspace
-      - $PWD/scripts/debian:/scripts
-    working_dir: /workspace
-    command:
-      - bash
-      -   /scripts/entrypoint.sh
   stage-end:
-    build:
-      context: .
-    privileged: true
+    <<: *base
     environment:
+      STAGE_NAME: stage-end
       BASE_IMAGE: disk.stage-3.qcow2
       IMAGE_FILE: disk.qcow2
-      STAGE_NAME: stage-end
-    volumes:
-      - $PWD:/workspace
-      - $PWD/scripts/debian:/scripts
-    working_dir: /workspace
-    command:
-      - bash
-      -   /scripts/entrypoint.sh
   generate-ova:
-    build:
-      context: .
-    privileged: true
+    <<: *base
     environment:
       IMAGE_FILE: disk.qcow2
-    volumes:
-      - $PWD:/workspace
-      - $PWD/scripts/debian:/scripts
-    working_dir: /workspace
     command:
       - bash
       -   /scripts/generate-ova.sh

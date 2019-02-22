@@ -19,12 +19,12 @@ mkdir -p /dev/disk/by-uuid/$MAIN_UUID
 # Generate
 cat > /etc/default/grub <<"EOF"
 GRUB_DEFAULT=0
-GRUB_TIMEOUT=30
+GRUB_TIMEOUT=0
 RUB_TIMEOUT_STYLE=menu
 GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
 GRUB_TERMINAL_INPUT=console
 GRUB_TERMINAL_OUTPUT=console
-GRUB_CMDLINE_LINUX="console=ttyS0,38400n8d console=tty0 consoleblank=0 biosdevname=0 net.ifnames=0 elevator=noop scsi_mod.use_blk_mq=Y"
+GRUB_CMDLINE_LINUX="biosdevname=0 net.ifnames=0 console=ttyS0,38400n8d console=tty0 consoleblank=0 elevator=noop scsi_mod.use_blk_mq=Y"
 EOF
 grub-mkconfig -o $TARGET_DIR/boot/grub/grub.cfg
 grub-install --boot-directory=/mnt/target/boot --modules="part_msdos" /dev/xvda

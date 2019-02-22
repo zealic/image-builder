@@ -1,7 +1,9 @@
 COMPOSE=docker-compose
 
-vm:
-	@qemu-system-x86_64 -hda disk.qcow2 -m 512
+exec-vm: exec-vm-Debian
+
+exec-vm-%:
+	@qemu-system-x86_64 -hda disks/$*.vmdk -m 512
 
 build: stage-1 stage-2 stage-3 stage-end
 
