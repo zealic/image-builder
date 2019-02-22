@@ -34,6 +34,7 @@ EOF
 cat >> $FILE_DISTRO <<EOF
   - name: stages
     index: "0"
+    chroot: false
     items:
 EOF
 find distro/${DISTRO_NAME}/stages -type file -name 'stage-*.sh' \
@@ -43,6 +44,7 @@ find distro/${DISTRO_NAME}/stages -type file -name 'stage-*.sh' \
 cat >> $FILE_DISTRO <<EOF
   - name: packages
     index: "1"
+    chroot: true
     items:
 EOF
 find distro/${DISTRO_NAME}/packages -type file -name '*.sh' \

@@ -1,12 +1,19 @@
 #!/bin/bash
 source /scripts/common/common-env.sh
-if [[ ! "$STAGE_NAME" == "stage-1" ]]; then
+if [[ -z "$PIPELINE_ROOT_JOB" ]]; then
   source /scripts/common/common-snapshot.sh
   source /scripts/common/common-load.sh
 fi
 
-if [[ -e /scripts/stages/$STAGE_NAME.sh ]]; then
-  source /scripts/stages/$STAGE_NAME.sh
+JOB_FILE=/scripts/pipelines/$PIPELINE_NAME/$PIPELINE_JOB.sh
+if [[ -e $JOB_FILE ]]; then
+  if [[ -z $CHROOT ]]; then
+    source $JOB_FILE
+  else # chroot run
+    cp $JOB_FILE $TARGET_DIR/tmp/$PIPELINE_JOB.sh
+    chroot $TARGET_DIR bash /tmp/$PIPELINE_JOB.sh
+    rm /tmp/$PIPELINE_JOB.sh
+  fi
 fi
 
 source /scripts/common/common-clean.sh

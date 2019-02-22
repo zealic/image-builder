@@ -1,6 +1,6 @@
 {{ $distro := (ds "distro") -}}
 {{ $pipelines := ($distro.pipelines | coll.Sort "index") -}}
-COMPOSE=docker-compose --log-level CRITICAL -f {{ $distro.dirs.config }}/compose.yml
+COMPOSE=docker-compose -f {{ $distro.dirs.config }}/compose.yml
 
 exec:
 	{{- $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) }}
@@ -22,10 +22,10 @@ build: builder{{ range $pipelines }} build-{{ .name }}{{ end }}
 {{- $items := $pipeline.items | coll.Sort }}
 build-{{ $pipeline.name }}:{{ range $items }} {{ $pipeline.name }}-{{ .}}{{ end }} pipeline-{{ $pipeline.name }}
 {{ $pipeline.name }}-%:
-	@$(COMPOSE) run --rm {{ $pipeline.name }}-$*
+	$(COMPOSE) run --rm {{ $pipeline.name }}-$*
 {{- end }}
 pipeline-%:
-	@$(COMPOSE) run --rm pipeline-$*
+	$(COMPOSE) run --rm pipeline-$*
 
 
 #===============================================================================

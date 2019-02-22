@@ -12,7 +12,9 @@ services:
       - $PWD/{{ $distro.dirs.disks }}:/workspace
       - $PWD/{{ $distro.dirs.artifacts }}:/{{ $distro.dirs.artifacts }}
       - $PWD/distro/common:/scripts/common:ro
-      - $PWD/distro/{{ $distro.name }}/stages:/scripts/stages:ro
+      {{- range $pipeline := $pipelines }}
+      - $PWD/distro/{{ $distro.name }}/{{ $pipeline.name }}:/scripts/pipelines/{{ $pipeline.name }}:ro
+      {{- end }}
     working_dir: /workspace
     command:
       - bash
@@ -28,7 +30,7 @@ services:
     <<: *base
     environment:
       DISTRO_NAME: {{ $distro.name }}
-      STAGE_NAME: pipeline-{{ $pipeline.name }}
+      PIPELINE_NAME: {{ $pipeline.name }}
       {{- $lastItemIndex := math.Sub (len $items) 1 }}
       BASE_IMAGE: pipeline.{{ $pipeline.name }}.{{ index $items $lastItemIndex }}.qcow2
       IMAGE_FILE: pipeline.{{ $pipeline.name }}.qcow2
@@ -37,13 +39,19 @@ services:
     <<: *base
     environment:
       DISTRO_NAME: {{ $distro.name }}
-      STAGE_NAME: {{ $name }}
+      PIPELINE_NAME: {{ $pipeline.name }}
+      PIPELINE_JOB: {{ $name }}
+      {{- if $pipeline.chroot }}
+      CHROOT: "1"
+      {{- end }}
       {{- if and (eq $n 0) (ne $pn 0) }}
       {{- $prevPipeline := (index $pipelines (math.Sub $pn 1)) }}
       BASE_IMAGE: pipeline.{{ $prevPipeline.name }}.qcow2
       {{- else if ne $n 0 }}
       {{- $prevItemIndex := math.Sub $n 1 }}
       BASE_IMAGE: pipeline.{{ $pipeline.name }}.{{ index $items $prevItemIndex }}.qcow2
+      {{- else }}
+      PIPELINE_ROOT_JOB: 1
       {{- end }}
       IMAGE_FILE: pipeline.{{ $pipeline.name }}.{{ $name }}.qcow2
   {{- end }}
