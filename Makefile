@@ -1,6 +1,6 @@
 COMPOSE=docker-compose
 
-exec-vm: exec-vm-Debian
+exec-vm: exec-vm-debian
 
 exec-vm-%:
 	@qemu-system-x86_64 -hda disks/$*.vmdk -m 512

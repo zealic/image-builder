@@ -37,7 +37,7 @@ services:
     <<: *base
     environment:
       IMAGE_FILE: disk.qcow2
+      DISTRO_NAME: ${DISTRO_NAME:-debian}
     command:
       - bash
       -   /scripts/generate-ova.sh
-      -     Debian
