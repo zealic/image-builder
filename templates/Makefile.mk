@@ -5,7 +5,10 @@ COMPOSE=docker-compose --log-level CRITICAL -f {{ $distro.dirs.config }}/compose
 exec:
 	@qemu-system-x86_64 -hda {{ $distro.dirs.disks }}/disk.post.qcow2 -m 512
 
-build: {{- range $i, $name := $stages }} {{ $name }}{{ end }} post-stage
+builder:
+	@docker build -t {{ $distro.builder }} -f {{ $distro.dirs.config }}/Dockerfile .
+
+build: builder {{- range $i, $name := $stages }} {{ $name }}{{ end }} post-stage
 
 artifacts: artifact-vmdk artifact-ova
 

@@ -8,8 +8,8 @@ DISKS_DIR=$CONFIG_DIR/disks
 ARTIFACTS_DIR=artifacts
 
 # Check disto
-if [[ ! -d "${DISTRO_DIR}" ]] || [[ "$DISTRO_NAME" == "common" ]]; then
-  echo "Invalid distro name '$(DISTRO_NAME)'"
+if [[ ! -d "${DISTRO_DIR}" ]] || [[ "${DISTRO_NAME}" == "common" ]]; then
+  echo "Invalid distro name '${DISTRO_NAME}'"
   exit 1
 fi
 
@@ -18,6 +18,7 @@ mkdir -p $METADATA_DIR
 FILE_DISTRO=$METADATA_DIR/distro.yml
 cat > $FILE_DISTRO <<EOF
 name: "$DISTRO_NAME"
+builder: "${DISTRO_NAME}-image-builder:fake"
 dirs:
   config: "${CONFIG_DIR}"
   artifacts: "${ARTIFACTS_DIR}"

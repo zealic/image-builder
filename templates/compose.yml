@@ -3,8 +3,7 @@
 version: "2.4"
 services:
   _base: &base
-    build:
-      context: .
+    image: {{ $distro.builder }}
     privileged: true
     environment:
       DISTRO_NAME: {{ $distro.name }}
