@@ -1,5 +1,5 @@
 {{ $distro := (ds "distro") -}}
-{{ $stages := $distro.stages | coll.Sort -}}
+{{ $pipelines := ($distro.pipelines | coll.Sort "index") -}}
 version: "2.4"
 services:
   _base: &base
@@ -17,30 +17,47 @@ services:
     command:
       - bash
       -   /scripts/common/entrypoint.sh
-{{- range $i, $name := $stages }}
-  {{ $name }}:
+
+#===============================================================================
+# Pipelines
+{{- range $pn, $pipeline := $pipelines }}
+  {{- $items := $pipeline.items | coll.Sort }}
+  #======================================
+  # pipeline - {{ $pipeline.name }}
+  pipeline-{{ $pipeline.name }}:
+    <<: *base
+    environment:
+      DISTRO_NAME: {{ $distro.name }}
+      STAGE_NAME: pipeline-{{ $pipeline.name }}
+      {{- $lastItemIndex := math.Sub (len $items) 1 }}
+      BASE_IMAGE: pipeline.{{ $pipeline.name }}.{{ index $items $lastItemIndex }}.qcow2
+      IMAGE_FILE: pipeline.{{ $pipeline.name }}.qcow2
+  {{- range $n, $name := $items }}
+  {{ $pipeline.name }}-{{ $name }}:
     <<: *base
     environment:
       DISTRO_NAME: {{ $distro.name }}
       STAGE_NAME: {{ $name }}
-      {{- if ne $i 0 }}
-      BASE_IMAGE: disk.{{ index $stages (math.Sub $i 1) }}.qcow2
+      {{- if and (eq $n 0) (ne $pn 0) }}
+      {{- $prevPipeline := (index $pipelines (math.Sub $pn 1)) }}
+      BASE_IMAGE: pipeline.{{ $prevPipeline.name }}.qcow2
+      {{- else if ne $n 0 }}
+      {{- $prevItemIndex := math.Sub $n 1 }}
+      BASE_IMAGE: pipeline.{{ $pipeline.name }}.{{ index $items $prevItemIndex }}.qcow2
       {{- end }}
-      IMAGE_FILE: disk.{{ $name }}.qcow2
+      IMAGE_FILE: pipeline.{{ $pipeline.name }}.{{ $name }}.qcow2
+  {{- end }}
 {{- end }}
-  post-stage:
-    <<: *base
-    environment:
-      DISTRO_NAME: {{ $distro.name }}
-      STAGE_NAME: post-stage
-      {{- $lastStageIndex := math.Sub (len $stages) 1 }}
-      BASE_IMAGE: disk.{{ index $stages $lastStageIndex }}.qcow2
-      IMAGE_FILE: disk.post.qcow2
+
+
+#===============================================================================
+# artifacts
   artifact-vmdk:
     <<: *base
     environment:
       DISTRO_NAME: {{ $distro.name }}
-      IMAGE_FILE: disk.post.qcow2
+      {{- $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) }}
+      IMAGE_FILE: pipeline.{{ $lastPipeline.name }}.qcow2
       TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.vmdk
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
     command:

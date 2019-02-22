@@ -1,15 +1,35 @@
 {{ $distro := (ds "distro") -}}
-{{ $stages := $distro.stages | coll.Sort -}}
+{{ $pipelines := ($distro.pipelines | coll.Sort "index") -}}
 COMPOSE=docker-compose --log-level CRITICAL -f {{ $distro.dirs.config }}/compose.yml
 
 exec:
-	@qemu-system-x86_64 -hda {{ $distro.dirs.disks }}/disk.post.qcow2 -m 512
+	{{- $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) }}
+	@qemu-system-x86_64 -hda {{ $distro.dirs.disks }}/pipeline.{{ $lastPipeline.name }}.qcow2 -m 512
+
+exec%:
+	$(eval DISTRO_NAME:=$(firstword $(subst :, ,$*)))
+	$(eval PIPELINE_NAME:=$(subst :, ,$*))
+	qemu-system-x86_64 -hda .config/debian/disks/pipeline.$(PIPELINE_NAME).qcow2 -m 512
 
 builder:
 	@docker build -t {{ $distro.builder }} -f {{ $distro.dirs.config }}/Dockerfile .
 
-build: builder {{- range $i, $name := $stages }} {{ $name }}{{ end }} post-stage
 
+#===============================================================================
+# Pipelines
+build: builder{{ range $pipelines }} build-{{ .name }}{{ end }}
+{{- range $pn, $pipeline := $pipelines }}
+{{- $items := $pipeline.items | coll.Sort }}
+build-{{ $pipeline.name }}:{{ range $items }} {{ $pipeline.name }}-{{ .}}{{ end }} pipeline-{{ $pipeline.name }}
+{{ $pipeline.name }}-%:
+	@$(COMPOSE) run --rm {{ $pipeline.name }}-$*
+{{- end }}
+pipeline-%:
+	@$(COMPOSE) run --rm pipeline-$*
+
+
+#===============================================================================
+# artifacts
 artifacts: artifact-vmdk artifact-ova
 
 artifact-vmdk:

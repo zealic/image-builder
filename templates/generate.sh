@@ -19,15 +19,34 @@ FILE_DISTRO=$METADATA_DIR/distro.yml
 cat > $FILE_DISTRO <<EOF
 name: "$DISTRO_NAME"
 builder: "${DISTRO_NAME}-image-builder:fake"
+pipelines:
+  - stages
+  - packages
+  - platforms
 dirs:
   config: "${CONFIG_DIR}"
   artifacts: "${ARTIFACTS_DIR}"
   disks: "${DISKS_DIR}"
-stages:
+pipelines:
 EOF
 
+# stages
+cat >> $FILE_DISTRO <<EOF
+  - name: stages
+    index: "0"
+    items:
+EOF
 find distro/${DISTRO_NAME}/stages -type file -name 'stage-*.sh' \
-  | xargs -I {} basename {} .sh | awk '{print "  - " "\"" $1 "\""}' >> $FILE_DISTRO
+  | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}' >> $FILE_DISTRO
+
+# packages
+cat >> $FILE_DISTRO <<EOF
+  - name: packages
+    index: "1"
+    items:
+EOF
+find distro/${DISTRO_NAME}/packages -type file -name '*.sh' \
+  | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}' >> $FILE_DISTRO
 
 # Execute generate
 echo Generating $DISTRO_NAME configuration...
