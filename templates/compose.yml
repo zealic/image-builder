@@ -7,7 +7,6 @@ services:
     privileged: true
     environment:
       DISTRO_NAME: {{ $distro.name }}
-      MIRROR_HOST: http://mirrors.ustc.edu.cn/debian/
     volumes:
       - $PWD/{{ $distro.dirs.disks }}:/workspace
       - $PWD/{{ $distro.dirs.artifacts }}:/{{ $distro.dirs.artifacts }}
@@ -39,6 +38,7 @@ services:
     <<: *base
     environment:
       DISTRO_NAME: {{ $distro.name }}
+      MIRROR_HOST: {{ index $distro.mirrors $distro.name }}
       PIPELINE_NAME: {{ $pipeline.name }}
       PIPELINE_JOB: {{ $name }}
       {{- if $pipeline.chroot }}

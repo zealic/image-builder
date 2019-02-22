@@ -19,6 +19,8 @@ FILE_DISTRO=$METADATA_DIR/distro.yml
 cat > $FILE_DISTRO <<EOF
 name: "$DISTRO_NAME"
 builder: "${DISTRO_NAME}-image-builder:fake"
+mirrors:
+  debian: mirrors.ustc.edu.cn
 pipelines:
   - stages
   - packages

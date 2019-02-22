@@ -23,4 +23,4 @@ add-apt-repository \
 apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io
 
-systemctl enable docker-ce
+systemctl enable docker

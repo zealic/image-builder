@@ -1,8 +1,8 @@
-cat > /etc/apt/sources.list <<"EOF"
-deb http://deb.debian.org/debian/ stretch main
-deb-src http://deb.debian.org/debian/ stretch main
-deb http://security.debian.org/ stretch/updates main
-deb-src http://security.debian.org/ stretch/updates main
-deb http://deb.debian.org/debian/ stretch-updates main
-deb-src http://deb.debian.org/debian/ stretch-updates main
+cat > /etc/apt/sources.list <<EOF
+deb http://${MIRROR_HOST}/debian/ stretch main
+deb-src http://${MIRROR_HOST}/debian/ stretch main
+deb http://${MIRROR_HOST}/debian/ stretch-updates main
+deb-src http://${MIRROR_HOST}/debian/ stretch-updates main
+deb http://${MIRROR_HOST}/debian-security/ stretch/updates main
+deb-src http://${MIRROR_HOST}/debian-security/ stretch/updates main
 EOF
