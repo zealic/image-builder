@@ -1,9 +1,6 @@
 #!/bin/bash
-DISTRO_NAME=${DISTRO_NAME}
-# generate ova
-OUTPUT=${DISTRO_NAME:-default}.ova
-if [ -f $OUTPUT ]; then
-  rm $OUTPUT
+if [ -f $TARGET_FILE ]; then
+  rm $TARGET_FILE
 fi
 
 cat > ${DISTRO_NAME}.vmx <<EOF
@@ -14,7 +11,7 @@ memsize = "1024"
 mem.hotadd = "TRUE"
 sata0.present = "TRUE"
 sata0:0.present = "TRUE"
-sata0:0.fileName = "${DISTRO_NAME}.vmdk"
+sata0:0.fileName = "${IMAGE_FILE}"
 ethernet0.present = "TRUE"
 ethernet0.connectionType = "nat"
 ethernet0.virtualDev = "e1000"
@@ -23,10 +20,7 @@ ethernet0.addressType = "generated"
 guestOS = "otherlinux-64"
 EOF
 
-echo Generating vmdk...
-qemu-img convert -O vmdk ${IMAGE_FILE} ${DISTRO_NAME}.vmdk
 echo Generating ova...
-
 # Best performance building in container dir
-ovftool ${DISTRO_NAME}.vmx /${OUTPUT}
-mv /$OUTPUT $PWD
+ovftool ${DISTRO_NAME}.vmx /${DISTRO_NAME}.ova
+mv /${DISTRO_NAME}.ova /$TARGET_FILE

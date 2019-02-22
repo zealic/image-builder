@@ -7,8 +7,13 @@ exec:
 
 build: {{- range $i, $name := $stages }} {{ $name }}{{ end }} post-stage
 
-generate-ova:
-	@$(COMPOSE) run --rm generate-ova
+artifacts: artifact-vmdk artifact-ova
+
+artifact-vmdk:
+	@$(COMPOSE) run --rm artifact-vmdk
+
+artifact-ova:
+	@$(COMPOSE) run --rm artifact-ova
 
 stage-%:
 	@$(COMPOSE) run --rm stage-$*

@@ -1,0 +1,3 @@
+#!/bin/bash
+echo Generating vmdk...
+qemu-img convert -O vmdk ${IMAGE_FILE} ${TARGET_FILE}

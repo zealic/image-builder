@@ -11,6 +11,7 @@ services:
       MIRROR_HOST: http://mirrors.ustc.edu.cn/debian/
     volumes:
       - $PWD/{{ $distro.dirs.disks }}:/workspace
+      - $PWD/{{ $distro.dirs.artifacts }}:/{{ $distro.dirs.artifacts }}
       - $PWD/distro/common:/scripts/common:ro
       - $PWD/distro/{{ $distro.name }}/stages:/scripts/stages:ro
     working_dir: /workspace
@@ -21,6 +22,7 @@ services:
   {{ $name }}:
     <<: *base
     environment:
+      DISTRO_NAME: {{ $distro.name }}
       STAGE_NAME: {{ $name }}
       {{- if ne $i 0 }}
       BASE_IMAGE: disk.{{ index $stages (math.Sub $i 1) }}.qcow2
@@ -30,15 +32,28 @@ services:
   post-stage:
     <<: *base
     environment:
+      DISTRO_NAME: {{ $distro.name }}
       STAGE_NAME: post-stage
       {{- $lastStageIndex := math.Sub (len $stages) 1 }}
       BASE_IMAGE: disk.{{ index $stages $lastStageIndex }}.qcow2
       IMAGE_FILE: disk.post.qcow2
+  artifact-vmdk:
+    <<: *base
+    environment:
+      DISTRO_NAME: {{ $distro.name }}
+      IMAGE_FILE: disk.post.qcow2
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.vmdk
+      ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
+    command:
+      - bash
+      -   /scripts/common/artifact-vmdk.sh
   artifact-ova:
     <<: *base
     environment:
-      IMAGE_FILE: disk.post.qcow2
-      ARTIFACT_DIR: {{ $distro.dirs.artifacts }}
+      DISTRO_NAME: {{ $distro.name }}
+      IMAGE_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.vmdk
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.ova
+      ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
     command:
       - bash
-      -   /scripts/common/generate-ova.sh
+      -   /scripts/common/artifact-ova.sh
