@@ -1,15 +1,16 @@
 {{ $distro := (ds "distro") -}}
 {{ $pipelines := ($distro.pipelines | coll.Sort "index") -}}
 COMPOSE=docker-compose -f {{ $distro.dirs.config }}/compose.yml
+QEMU=qemu-system-x86_64 -smp 2 -m 512
 
 exec:
 	{{- $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) }}
-	@qemu-system-x86_64 -hda {{ $distro.dirs.disks }}/pipeline.{{ $lastPipeline.name }}.qcow2 -m 512
+	$(QEMU) -hda {{ $distro.dirs.disks }}/pipeline.{{ $lastPipeline.name }}.qcow2
 
 exec%:
 	$(eval DISTRO_NAME:=$(firstword $(subst :, ,$*)))
 	$(eval PIPELINE_NAME:=$(subst :, ,$*))
-	qemu-system-x86_64 -hda .config/debian/disks/pipeline.$(PIPELINE_NAME).qcow2 -m 512
+	$(QEMU) -hda .config/debian/disks/pipeline.$(PIPELINE_NAME).qcow2
 
 builder:
 	@docker build -t {{ $distro.builder }} -f {{ $distro.dirs.config }}/Dockerfile .
