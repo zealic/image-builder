@@ -1,5 +1,5 @@
 apt-get update
-apt-get install -y \
+apt-get install -yq \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -21,6 +21,7 @@ add-apt-repository \
 
 # docker-ce
 apt-get update
-apt-get install -y docker-ce docker-ce-cli containerd.io
+apt-get install -yq \
+  docker-ce docker-ce-cli containerd.io
 
 systemctl enable docker

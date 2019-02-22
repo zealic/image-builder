@@ -10,7 +10,6 @@ if [[ -e $JOB_FILE ]]; then
   if [[ -z $CHROOT ]]; then
     source $JOB_FILE
   else # chroot run
-    set -e
     cp $JOB_FILE $TARGET_DIR/tmp/$PIPELINE_JOB.sh
     chroot $TARGET_DIR bash /tmp/$PIPELINE_JOB.sh
     rm $TARGET_DIR/tmp/$PIPELINE_JOB.sh
