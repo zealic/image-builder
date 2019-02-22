@@ -52,6 +52,17 @@ EOF
 find distro/${DISTRO_NAME}/packages -type file -name '*.sh' \
   | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}' >> $FILE_DISTRO
 
+# application
+cat >> $FILE_DISTRO <<EOF
+  - name: application
+    index: "1"
+    chroot: true
+    items:
+EOF
+find distro/${DISTRO_NAME}/application -type file -name '*.sh' \
+  | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}' >> $FILE_DISTRO
+
+
 # Execute generate
 echo Generating $DISTRO_NAME configuration...
 gomplate -d distro=${FILE_DISTRO} \

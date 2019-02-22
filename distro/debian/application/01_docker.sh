@@ -1,10 +1,3 @@
-apt-get update
-apt-get install -yq \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg2
-
 # docker-compose
 COMPOSE_VER=1.23.2
 curl -sSL -o /usr/local/bin/docker-compose \
