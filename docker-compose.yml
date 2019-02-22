@@ -10,11 +10,12 @@ services:
       MIRROR_HOST: http://mirrors.ustc.edu.cn/debian/
     volumes:
       - $PWD/.disks:/workspace
-      - $PWD/scripts:/scripts:ro
+      - $PWD/distro/common:/scripts/common:ro
+      - $PWD/distro/${DISTRO_NAME:-debian}/stages:/scripts/stages:ro
     working_dir: /workspace
     command:
       - bash
-      -   /scripts/entrypoint.sh
+      -   /scripts/common/entrypoint.sh
   stage-2:
     <<: *base
     environment:
