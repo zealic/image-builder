@@ -1,0 +1,44 @@
+{{ $distro := (ds "distro") -}}
+{{ $stages := $distro.stages | coll.Sort -}}
+version: "2.4"
+services:
+  _base: &base
+    build:
+      context: .
+    privileged: true
+    environment:
+      DISTRO_NAME: {{ $distro.name }}
+      MIRROR_HOST: http://mirrors.ustc.edu.cn/debian/
+    volumes:
+      - $PWD/{{ $distro.dirs.disks }}:/workspace
+      - $PWD/distro/common:/scripts/common:ro
+      - $PWD/distro/{{ $distro.name }}/stages:/scripts/stages:ro
+    working_dir: /workspace
+    command:
+      - bash
+      -   /scripts/common/entrypoint.sh
+{{- range $i, $name := $stages }}
+  {{ $name }}:
+    <<: *base
+    environment:
+      STAGE_NAME: {{ $name }}
+      {{- if ne $i 0 }}
+      BASE_IMAGE: disk.{{ index $stages (math.Sub $i 1) }}.qcow2
+      {{- end }}
+      IMAGE_FILE: disk.{{ $name }}.qcow2
+{{- end }}
+  post-stage:
+    <<: *base
+    environment:
+      STAGE_NAME: post-stage
+      {{- $lastStageIndex := math.Sub (len $stages) 1 }}
+      BASE_IMAGE: disk.{{ index $stages $lastStageIndex }}.qcow2
+      IMAGE_FILE: disk.post.qcow2
+  artifact-ova:
+    <<: *base
+    environment:
+      IMAGE_FILE: disk.post.qcow2
+      ARTIFACT_DIR: {{ $distro.dirs.artifacts }}
+    command:
+      - bash
+      -   /scripts/common/generate-ova.sh

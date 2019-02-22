@@ -5,6 +5,8 @@ if [[ ! "$STAGE_NAME" == "stage-1" ]]; then
   source /scripts/common/common-load.sh
 fi
 
-source /scripts/stages/$STAGE_NAME.sh
+if [[ -e /scripts/stages/$STAGE_NAME.sh ]]; then
+  source /scripts/stages/$STAGE_NAME.sh
+fi
 
 source /scripts/common/common-clean.sh

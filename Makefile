@@ -1,14 +1,13 @@
-COMPOSE=docker-compose
+.DEFAULT_GOAL:=debian-generate
+DISTRO_MAKE=make -f
 
-exec-vm: exec-vm-debian
+%:
+	$(eval DISTRO_NAME:=$(firstword $(subst -, ,$*)))
+	$(eval SUBCMD:=$(subst $(DISTRO_NAME)-, ,$*))
+	make -f .config/$(DISTRO_NAME)/Makefile.mk $(SUBCMD)
 
-exec-vm-%:
-	@qemu-system-x86_64 -hda disks/$*.vmdk -m 512
+%-generate:
+	@bash templates/generate.sh $(DISTRO_NAME)
 
-build: stage-1 stage-2 stage-3 stage-end
-
-stage-%:
-	@$(COMPOSE) run --rm stage-$*
-
-generate-ova:
-	@$(COMPOSE) run --rm generate-ova
+clean:
+	@rm -rf .config artifacts

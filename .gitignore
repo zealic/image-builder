@@ -1,5 +1,2 @@
-*.qcow2
-*.vmdk
-*.ova
-*.vmx
-.*
+/artifacts
+/.*
