@@ -10,7 +10,7 @@ services:
     volumes:
       - $PWD/{{ $distro.dirs.disks }}:/workspace
       - $PWD/{{ $distro.dirs.artifacts }}:/{{ $distro.dirs.artifacts }}
-      - $PWD/distro/common:/scripts/common:ro
+      - $PWD/common:/scripts/common:ro
       {{- range $pipeline := $pipelines }}
       - $PWD/distro/{{ $distro.name }}/{{ $pipeline.name }}:/scripts/pipelines/{{ $pipeline.name }}:ro
       {{- end }}
