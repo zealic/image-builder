@@ -6,3 +6,5 @@ deb-src http://${MIRROR_HOST}/debian/ stretch-updates main
 deb http://${MIRROR_HOST}/debian-security/ stretch/updates main
 deb-src http://${MIRROR_HOST}/debian-security/ stretch/updates main
 EOF
+
+apt-get update
