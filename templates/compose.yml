@@ -24,7 +24,7 @@ services:
 {{- range $pn, $pipeline := $pipelines }}
   {{- $prevPipeline := (index $pipelines 0) }}
   {{- if ne $pn 0 }}
-  {{- $prevPipeline := (index $pipelines (math.Sub $pn 1)) }}
+  {{- $prevPipeline = (index $pipelines (math.Sub $pn 1)) }}
   {{- end }}
   {{- $items := $pipeline.items | coll.Sort }}
   #======================================
