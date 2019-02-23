@@ -21,12 +21,12 @@ builder:
 build: builder{{ range $pipelines }} build-{{ .name }}{{ end }}
 {{- range $pn, $pipeline := $pipelines }}
 {{- $items := $pipeline.items | coll.Sort }}
-build-{{ $pipeline.name }}:{{ range $items }} {{ $pipeline.name }}-{{ .}}{{ end }} pipeline-{{ $pipeline.name }}
+build-{{ $pipeline.name }}: pipeline-{{ $pipeline.name }}{{ range $items }} {{ $pipeline.name }}-{{ .}}{{ end }}
 {{ $pipeline.name }}-%:
-	$(COMPOSE) run --rm {{ $pipeline.name }}-$*
+	@$(COMPOSE) run --rm {{ $pipeline.name }}-$*
 {{- end }}
 pipeline-%:
-	$(COMPOSE) run --rm pipeline-$*
+	@$(COMPOSE) run --rm pipeline-$*
 
 
 #===============================================================================

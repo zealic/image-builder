@@ -17,11 +17,15 @@ services:
     working_dir: /workspace
     command:
       - bash
-      -   /scripts/common/entrypoint.sh
+      -   /scripts/common/job.sh
 
 #===============================================================================
 # Pipelines
 {{- range $pn, $pipeline := $pipelines }}
+  {{- $prevPipeline := (index $pipelines 0) }}
+  {{- if ne $pn 0 }}
+  {{- $prevPipeline := (index $pipelines (math.Sub $pn 1)) }}
+  {{- end }}
   {{- $items := $pipeline.items | coll.Sort }}
   #======================================
   # pipeline - {{ $pipeline.name }}
@@ -30,9 +34,15 @@ services:
     environment:
       DISTRO_NAME: {{ $distro.name }}
       PIPELINE_NAME: {{ $pipeline.name }}
-      {{- $lastItemIndex := math.Sub (len $items) 1 }}
-      BASE_IMAGE: pipeline.{{ $pipeline.name }}.{{ index $items $lastItemIndex }}.qcow2
+      {{- if eq $pn 0 }}
+      ROOT_PIPELINE: "1"
+      {{- else }}
+      BASE_IMAGE: pipeline.{{ $prevPipeline.name }}.qcow2
+      {{- end }}
       IMAGE_FILE: pipeline.{{ $pipeline.name }}.qcow2
+    command:
+      - bash
+      -   /scripts/common/pipeline.sh
   {{- range $n, $name := $items }}
   {{ $pipeline.name }}-{{ $name }}:
     <<: *base
@@ -44,16 +54,7 @@ services:
       {{- if $pipeline.chroot }}
       CHROOT: "1"
       {{- end }}
-      {{- if and (eq $n 0) (ne $pn 0) }}
-      {{- $prevPipeline := (index $pipelines (math.Sub $pn 1)) }}
-      BASE_IMAGE: pipeline.{{ $prevPipeline.name }}.qcow2
-      {{- else if ne $n 0 }}
-      {{- $prevItemIndex := math.Sub $n 1 }}
-      BASE_IMAGE: pipeline.{{ $pipeline.name }}.{{ index $items $prevItemIndex }}.qcow2
-      {{- else }}
-      PIPELINE_ROOT_JOB: 1
-      {{- end }}
-      IMAGE_FILE: pipeline.{{ $pipeline.name }}.{{ $name }}.qcow2
+      IMAGE_FILE: pipeline.{{ $prevPipeline.name }}.qcow2
   {{- end }}
 {{- end }}
 

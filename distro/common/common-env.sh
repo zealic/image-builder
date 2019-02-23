@@ -9,6 +9,8 @@ TARGET_DIR=/mnt/target
 IMAGE_FILE=${IMAGE_FILE:-disk.qcow2}
 IMAGE_SIZE=${IMAGE_SIZE:-$((1024*1024*1024*10))} # 10G
 SYSIMG_SIZE=${SYSIMG_SIZE:-$((4096*512))}
+
+# Part UUID
 get_uuid() {
   if [[ ! -e $WORKSPACE/.uuid ]]; then
     uuidgen > $WORKSPACE/.uuid
