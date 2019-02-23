@@ -19,10 +19,6 @@ name: "$DISTRO_NAME"
 builder: "${DISTRO_NAME}-image-builder:fake"
 mirrors:
   debian: mirrors.ustc.edu.cn
-pipelines:
-  - stages
-  - packages
-  - platforms
 dirs:
   config: "${CONFIG_DIR}"
   artifacts: "${ARTIFACTS_DIR}"
