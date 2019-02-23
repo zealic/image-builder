@@ -1,5 +1,5 @@
 {{ $distro := (ds "distro") -}}
-{{ $pipelines := ($distro.pipelines | coll.Sort "index") -}}
+{{ $pipelines := ($distro.pipelines | coll.Sort "order") -}}
 COMPOSE=docker-compose -f {{ $distro.dirs.config }}/compose.yml
 QEMU=qemu-system-x86_64 -smp 2 -m 512
 

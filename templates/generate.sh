@@ -3,19 +3,17 @@ DISTRO_NAME=${1:-debian}
 DISTRO_DIR=distro/${DISTRO_NAME}
 CONFIG_DIR=.config/${DISTRO_NAME}
 TEMPLATE_DIR=templates
-METADATA_DIR=$CONFIG_DIR/metadata
 DISKS_DIR=$CONFIG_DIR/disks
 ARTIFACTS_DIR=artifacts
 
 # Check disto
+mkdir -p "$CONFIG_DIR"
 if [[ ! -d "${DISTRO_DIR}" ]] || [[ "${DISTRO_NAME}" == "common" ]]; then
   echo "Invalid distro name '${DISTRO_NAME}'"
   exit 1
 fi
 
-mkdir -p $METADATA_DIR
-
-FILE_DISTRO=$METADATA_DIR/distro.yml
+FILE_DISTRO=$CONFIG_DIR/distro.yml
 cat > $FILE_DISTRO <<EOF
 name: "$DISTRO_NAME"
 builder: "${DISTRO_NAME}-image-builder:fake"
@@ -32,36 +30,23 @@ dirs:
 pipelines:
 EOF
 
-# stages
-cat >> $FILE_DISTRO <<EOF
-  - name: stages
-    index: "0"
-    chroot: false
-    items:
-EOF
-find distro/${DISTRO_NAME}/stages -type file -name '*.sh' \
-  | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}' >> $FILE_DISTRO
+gen_pipeline() {
+  local name=$1
+  local dir=distro/${DISTRO_NAME}/$1
 
-# packages
-cat >> $FILE_DISTRO <<EOF
-  - name: packages
-    index: "1"
-    chroot: true
-    items:
-EOF
-find distro/${DISTRO_NAME}/packages -type file -name '*.sh' \
-  | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}' >> $FILE_DISTRO
+  if [[ ! -e $dir/@metadata.yml ]]; then
+    return
+  fi
+  echo "  - name: $name" >> $FILE_DISTRO
+  cat $dir/@metadata.yml | sed 's/^/    /' >> $FILE_DISTRO
+  echo "    items:" >> $FILE_DISTRO
+  find $dir -type file -name '*.sh' \
+    | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}' >> $FILE_DISTRO
+}
 
-# application
-cat >> $FILE_DISTRO <<EOF
-  - name: application
-    index: "1"
-    chroot: true
-    items:
-EOF
-find distro/${DISTRO_NAME}/application -type file -name '*.sh' \
-  | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}' >> $FILE_DISTRO
-
+for pipeline in distro/${DISTRO_NAME}/*; do
+  gen_pipeline $(basename $pipeline)
+done
 
 # Execute generate
 echo Generating $DISTRO_NAME configuration...

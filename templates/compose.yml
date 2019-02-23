@@ -1,5 +1,5 @@
 {{ $distro := (ds "distro") -}}
-{{ $pipelines := ($distro.pipelines | coll.Sort "index") -}}
+{{ $pipelines := ($distro.pipelines | coll.Sort "order") -}}
 version: "2.4"
 services:
   _base: &base
