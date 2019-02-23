@@ -1,2 +1,2 @@
 apt-get install -yq \
-  curl git
+  curl git vim
