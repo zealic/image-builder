@@ -33,5 +33,11 @@ EOF
 systemctl enable systemd-networkd
 systemctl enable systemd-resolved
 
+# Copy and link systemd resolve file
+mkdir -p /run/systemd/resolve
+chown systemd-resolve:systemd-resolve /run/systemd/resolve
+cat /etc/resolv.conf > /run/systemd/resolve/resolve.conf
+ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+
 # Reset hostname
 rm /etc/hostname
