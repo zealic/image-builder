@@ -19,6 +19,9 @@ ClientIdentifier=mac
 UseDomains=true
 EOF
 
+# Update machine-id
+rm /etc/machine-id
+
 cat >> /etc/systemd/network/20-static-address.network <<EOF
 [Match]
 Name=eth*
