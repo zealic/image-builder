@@ -1,18 +1,33 @@
 apt-get update
 apt-get install -yq \
-  ethtool ifupdown iptables iproute2 net-tools iputils-ping \
+  iptables iproute2 \
+  net-tools iputils-ping dnsutils \
   telnet tcpdump
 
-cat >> /etc/network/interfaces <<EOF
-# The dhcp address
-auto eth0
-iface eth0 inet dhcp
+cat >> /etc/systemd/network/10-custom-network.network <<EOF
+[Match]
+Name=eth*
 
-# The static address
-#allow-hotplug eth0
-#iface eth0 inet static
-#	address 10.0.0.200
-#	netmask 255.255.0.0
-#	gateway 10.0.0.1
-#	dns-nameservers 10.0.0.1
+[Network]
+DHCP=ipv4
+LinkLocalAddressing=no
+IPv6AcceptRA=np
+
+[DHCP]
+UseDomains=true
+
+#[Address]
+#Address=10.0.65.10/16
 EOF
+
+systemctl enable systemd-networkd
+systemctl enable systemd-resolved
+
+# Copy and link systemd resolve file
+mkdir -p /run/systemd/resolve
+chown systemd-resolve:systemd-resolve /run/systemd/resolve
+cat /etc/resolv.conf > /run/systemd/resolve/resolve.conf
+ln -sf /run/systemd/resolve/resolve.conf /etc/resolv.conf
+
+# Reset hostname
+rm /etc/hostname
