@@ -4,30 +4,34 @@ apt-get install -yq \
   net-tools iputils-ping dnsutils \
   telnet tcpdump
 
-cat >> /etc/systemd/network/10-custom-network.network <<EOF
+cat >> /etc/systemd/network/10-dhcp.network <<EOF
 [Match]
 Name=eth*
 
 [Network]
 DHCP=ipv4
 LinkLocalAddressing=no
-IPv6AcceptRA=np
+IPv6AcceptRA=no
 
 [DHCP]
 UseDomains=true
+EOF
 
-#[Address]
-#Address=10.0.65.10/16
+cat >> /etc/systemd/network/20-static-address.network <<EOF
+[Match]
+Name=eth*
+
+[Network]
+Gateway=10.0.0.1
+DNS=10.0.0.1
+IPForward=ipv4
+
+[Address]
+Address=10.0.22.33/16
 EOF
 
 systemctl enable systemd-networkd
 systemctl enable systemd-resolved
-
-# Copy and link systemd resolve file
-mkdir -p /run/systemd/resolve
-chown systemd-resolve:systemd-resolve /run/systemd/resolve
-cat /etc/resolv.conf > /run/systemd/resolve/resolve.conf
-ln -sf /run/systemd/resolve/resolve.conf /etc/resolv.conf
 
 # Reset hostname
 rm /etc/hostname
