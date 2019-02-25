@@ -10,6 +10,7 @@ Name=eth*
 
 [Network]
 DHCP=ipv4
+IPForward=ipv4
 LinkLocalAddressing=no
 IPv6AcceptRA=no
 
@@ -36,7 +37,7 @@ systemctl enable systemd-resolved
 # Copy and link systemd resolve file
 mkdir -p /run/systemd/resolve
 chown systemd-resolve:systemd-resolve /run/systemd/resolve
-cat /etc/resolv.conf > /run/systemd/resolve/resolve.conf
+cat /etc/resolv.conf > /run/systemd/resolve/resolv.conf
 ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
 # Reset hostname
