@@ -15,6 +15,7 @@ LinkLocalAddressing=no
 IPv6AcceptRA=no
 
 [DHCP]
+ClientIdentifier=mac
 UseDomains=true
 EOF
 
