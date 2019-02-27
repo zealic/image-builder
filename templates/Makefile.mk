@@ -5,12 +5,14 @@ QEMU=qemu-system-x86_64 -smp 2 -m 512
 
 exec:
 	{{- $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) }}
-	$(QEMU) -hda {{ $distro.dirs.disks }}/pipeline.{{ $lastPipeline.name }}.qcow2
+	@cd {{ $distro.dirs.disks }}; qemu-img create -f qcow2 -b pipeline.{{ $lastPipeline.name }}.qcow2 exec.qcow2
+	$(QEMU) -hda {{ $distro.dirs.disks }}/exec.qcow2
 
 exec%:
 	$(eval DISTRO_NAME:=$(firstword $(subst :, ,$*)))
 	$(eval PIPELINE_NAME:=$(subst :, ,$*))
-	$(QEMU) -hda {{ $distro.dirs.disks }}/pipeline.$(PIPELINE_NAME).qcow2
+	@cd {{ $distro.dirs.disks }}; qemu-img create -f qcow2 -b pipeline.$(PIPELINE_NAME).qcow2 exec.$(PIPELINE_NAME).qcow2
+	$(QEMU) -hda {{ $distro.dirs.disks }}/exec.$(PIPELINE_NAME).qcow2
 
 builder:
 	@docker build -t {{ $distro.builder }} -f {{ $distro.dirs.spec }}/Dockerfile .
