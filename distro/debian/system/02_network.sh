@@ -1,7 +1,7 @@
 apt-get update
 apt-get install -yq \
   iptables iproute2 \
-  net-tools iputils-ping dnsutils \
+  net-tools iputils-ping dnsutils traceroute \
   telnet tcpdump
 
 cat >> /etc/systemd/network/10-dhcp.network <<EOF
