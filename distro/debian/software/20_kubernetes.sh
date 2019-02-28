@@ -7,5 +7,6 @@ EOF
 apt-get update
 apt-get install -y \
     ipvsadm ipset \ # for ipvs mode
+    nfs-common \ # nfs storage support
     kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
