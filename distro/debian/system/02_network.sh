@@ -17,6 +17,10 @@ IPv6AcceptRA=no
 [DHCP]
 ClientIdentifier=mac
 UseDomains=true
+
+[Address]
+#Label=eth0:0
+#Address=10.0.11.100
 EOF
 
 cat >> /etc/systemd/network/20-static-address.network <<EOF
