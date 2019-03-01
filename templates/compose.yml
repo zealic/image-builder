@@ -82,3 +82,12 @@ services:
     command:
       - bash
       -   /scripts/common/artifact-ova.sh
+  artifact-ova-upload:
+    <<: *base
+    environment:
+      DISTRO_NAME: {{ $distro.name }}
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.ova
+      ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
+    command:
+      - bash
+      -   /scripts/common/artifact-upload.sh
