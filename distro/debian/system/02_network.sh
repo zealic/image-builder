@@ -1,4 +1,3 @@
-apt-get update
 apt-get install -yq \
   iptables iproute2 \
   net-tools iputils-ping dnsutils traceroute \
@@ -20,7 +19,7 @@ UseDomains=true
 
 [Address]
 #Label=eth0:0
-#Address=10.0.11.100
+#Address=10.0.11.100/16
 EOF
 
 cat >> /etc/systemd/network/20-static-address.network <<EOF

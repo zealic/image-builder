@@ -1,2 +1,2 @@
 apt-get install -yq \
-  curl git vim
+  curl git vim tmux
