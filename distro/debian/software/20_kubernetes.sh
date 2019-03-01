@@ -5,8 +5,9 @@ deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 
 apt-get update
+# for ipvs mode, nfs storage support
 apt-get install -y \
-    ipvsadm ipset \ # for ipvs mode
-    nfs-common \ # nfs storage support
+    ipvsadm ipset \
+    nfs-common \
     kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
