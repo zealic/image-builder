@@ -3,6 +3,8 @@ include:
 
 distro-debian:
   stage: build
+  tags:
+    - nbd
   only:
     - master
   script:
