@@ -1,0 +1,10 @@
+include:
+  - remote: https://arp.to/@ci/docker.yml
+
+distro-debian:
+  stage: build
+  only:
+    - master
+  script:
+    - make debian:build
+    - make debian:artifacts
