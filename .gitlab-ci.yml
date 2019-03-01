@@ -4,8 +4,8 @@ include:
 variables:
   BEFORE_SCRIPT: |
     GOMPLATE_VER=3.1.0
-    GOMPLATE_URL=https://github.com/hairyhenderson/gomplate/releases/download/v$GOMPLATE_VER/gomplate_linux-amd64
-    wget -qO /usr/local/bin/gomplate $GOMPLATE_URL
+    GOMPLATE_URL=https://github.com/hairyhenderson/gomplate/releases/download/v$$GOMPLATE_VER/gomplate_linux-amd64
+    wget -qO /usr/local/bin/gomplate $$GOMPLATE_URL
     chmod +x /usr/local/bin/gomplate
 
 
