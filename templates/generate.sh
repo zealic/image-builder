@@ -36,7 +36,7 @@ gen_pipeline() {
   echo "  - name: $name" >> $FILE_DISTRO
   cat $dir/@metadata.yml | sed 's/^/    /' >> $FILE_DISTRO
   echo "    items:" >> $FILE_DISTRO
-  find $dir -type file -name '*.sh' \
+  find $dir -type f -name '*.sh' \
     | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}' >> $FILE_DISTRO
 }
 

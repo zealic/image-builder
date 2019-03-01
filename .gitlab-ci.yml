@@ -8,6 +8,5 @@ distro-debian:
   only:
     - master
   script:
-    - apk add findutils
     - make debian:build
     - make debian:artifacts
