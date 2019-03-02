@@ -18,8 +18,6 @@ builder-debian:
   only:
     refs:
       - schedules
-    changes:
-      - distro/debian/Dockerfile
   script:
     - make debian:builder
     - make debian:builder-push
