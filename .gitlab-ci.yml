@@ -17,6 +17,7 @@ builder-debian:
   stage: builder
   only:
     refs:
+      - triggers
       - schedules
   script:
     - make debian:builder
