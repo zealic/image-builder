@@ -5,6 +5,10 @@ SPEC_DIR=.specs/${DISTRO_NAME}
 TEMPLATE_DIR=templates
 DISKS_DIR=$SPEC_DIR/disks
 ARTIFACTS_DIR=artifacts
+CI_PROJECT_NAMESPACE=${CI_PROJECT_NAMESPACE:-zealic}
+CI_PROJECT_NAME=${CI_PROJECT_NAME:-$(basename ${PWD})}
+CI_REGISTRY=${CI_REGISTRY:-registry.gitlab.com}
+CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE:-${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}}
 
 # Check disto
 mkdir -p "$SPEC_DIR"
@@ -13,12 +17,24 @@ if [[ ! -d "${DISTRO_DIR}" ]] || [[ "${DISTRO_NAME}" == "common" ]]; then
   exit 1
 fi
 
+# Select mirrors by country
+COUNTRY=$(curl -sSL ifconfig.co/country)
+case $COUNTRY in
+  "Hong Kong"|China)
+    DEBIAN_MIRROR=mirrors.ustc.edu.cn
+    ;;
+  *)
+    DEBIAN_MIRROR=deb.debian.org
+    ;;
+esac
+
+
 FILE_DISTRO=$SPEC_DIR/distro.yml
 cat > $FILE_DISTRO <<EOF
 name: "$DISTRO_NAME"
-builder: "${DISTRO_NAME}-image-builder:fake"
+builder: "${CI_REGISTRY_IMAGE}:builder-${DISTRO_NAME}"
 mirrors:
-  debian: mirrors.ustc.edu.cn
+  debian: ${DEBIAN_MIRROR}
 dirs:
   spec: "${SPEC_DIR}"
   artifacts: "${ARTIFACTS_DIR}"

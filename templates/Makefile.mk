@@ -15,12 +15,14 @@ exec%:
 	$(QEMU) -hda {{ $distro.dirs.disks }}/exec.$(PIPELINE_NAME).qcow2
 
 builder:
-	@docker build -t {{ $distro.builder }} -f {{ $distro.dirs.spec }}/Dockerfile .
+	@docker build -t {{ $distro.builder }} -f distro/{{ $distro.name }}/Dockerfile .
 
+builder-push:
+	@docker push {{ $distro.builder }}
 
 #===============================================================================
 # Pipelines
-build: builder{{ range $pipelines }} build-{{ .name }}{{ end }}
+build: {{ range $pipelines }} build-{{ .name }}{{ end }}
 {{- range $pn, $pipeline := $pipelines }}
 {{- $items := $pipeline.items | coll.Sort }}
 build-{{ $pipeline.name }}: pipeline-{{ $pipeline.name }}{{ range $items }} {{ $pipeline.name }}-{{ .}}{{ end }}

@@ -9,6 +9,22 @@ variables:
     chmod +x /usr/local/bin/gomplate
 
 
+stages:
+  - builder
+  - build
+
+builder-debian:
+  stage: builder
+  only:
+    refs:
+      - schedules
+    changes:
+      - distro/debian/Dockerfile
+  script:
+    - make debian:builder
+    - make debian:builder-push
+
+
 distro-debian:
   stage: build
   tags:
