@@ -34,3 +34,4 @@ distro-debian:
   script:
     - make debian:build
     - make debian:artifacts
+    - make debian:artifacts-upload

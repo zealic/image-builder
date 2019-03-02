@@ -35,7 +35,7 @@ pipeline-%:
 
 #===============================================================================
 # artifacts
-artifacts: artifact-vmdk artifact-ova artifacts-ova-upload
+artifacts: artifact-vmdk artifact-ova
 
 artifact-vmdk:
 	@$(COMPOSE) run --rm artifact-vmdk
@@ -43,5 +43,5 @@ artifact-vmdk:
 artifact-ova:
 	@$(COMPOSE) run --rm artifact-ova
 
-artifacts-ova-upload:
+artifacts-upload:
 	@$(COMPOSE) run --rm artifact-ova-upload
