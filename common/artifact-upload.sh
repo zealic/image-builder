@@ -5,4 +5,4 @@ UPLOAD_FILE=$UPLOAD_URL/$(basename $TARGET_FILE)
 # WebDAV upload
 echo Uploading $(basename $TARGET_FILE) ...
 curl -sS -u anonymous: -X MKCOL UPLOAD_URL
-curl --fail -sS -u anonymous: -T "$TARGET_FILE" $UPLOAD_URL
+curl --fail -sS -u anonymous: -T "$TARGET_FILE" $UPLOAD_FILE
