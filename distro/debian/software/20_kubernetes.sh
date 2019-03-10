@@ -14,6 +14,7 @@ apt-mark hold kubelet kubeadm kubectl
 
 # helm
 HELM_VER=2.13.0
-curl -fsSL https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VER}-linux-amd64.tar.gz \
+HELM_URL=https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VER}-linux-amd64.tar.gz
+curl -fsSL "${HELM_URL}" \
     | tar --strip-components=1 -xvzf - -C /tmp
 mv /tmp/{helm,tiller} /usr/local/bin/
