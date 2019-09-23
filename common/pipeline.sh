@@ -17,6 +17,13 @@ fi
 #===============================================================================
 # Make root image
 #===============================================================================
+if lsmod | grep nbd ; then
+    echo NBD OK 
+else
+    echo Need enable NBD module!
+    exit 1
+fi
+
 # Make file system
 qemu-img create -f qcow2 ${IMAGE_FILE} ${IMAGE_SIZE}
 qemu-nbd -t -c $NBD_DEV ${IMAGE_FILE}
