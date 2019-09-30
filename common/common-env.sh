@@ -14,12 +14,16 @@ SYSIMG_SIZE=${SYSIMG_SIZE:-$(($SYSIMG_SECT_COUNT*$SECT_SIZE))}
 
 # Part UUID
 get_uuid() {
-  if [[ ! -e $WORKSPACE/.uuid ]]; then
+  if [[ ! -f $WORKSPACE/.uuid ]]; then
     uuidgen > $WORKSPACE/.uuid
   fi
   cat $WORKSPACE/.uuid
 }
 MAIN_UUID=`get_uuid`
+if [[ "$MAIN_UUID" == "" ]]; then
+  echo "Invalid UUID '$MAIN_UUID'."
+  exit 1
+fi
 
 # Device
 DEVID=${DEVID:-7}
