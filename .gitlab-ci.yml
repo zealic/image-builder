@@ -13,22 +13,31 @@ stages:
   - builder
   - build
 
+
 builder-debian:
-  stage: builder
-  only:
-    - web
-    - schedules
+  stage: build
+  rules:
+    - changes:
+        - distro/debian/Dockerfile
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - when: manual
   script:
     - make debian:builder
     - make debian:builder-push
-
 
 distro-debian:
   stage: build
   tags:
     - nbd
-  only:
-    - master
+  rules:
+    - changes:
+        - distro/debian/**/*
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - when: manual
   script:
     - make debian:build
     - make debian:artifacts
