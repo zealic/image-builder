@@ -1,7 +1,8 @@
 FROM debian:9-slim
 ENV DEBIAN_FRONTEND=noninteractive
-RUN export DEPS="curl debootstrap grub-pc qemu-utils parted uuid-runtime linux-image-amd64" \
-  && apt-get update && apt-get install -yq ${DEPS} \
+RUN export MAIN_DEPS="curl grub-pc qemu-utils parted uuid-runtime kmod" \
+  && export IMG_DEPS="debootstrap linux-image-amd64" \
+  && apt-get update && apt-get install -yq ${MAIN_DEPS} ${IMG_DEPS} \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ENV OVFTOOL_VER=4.3.0-7948156
