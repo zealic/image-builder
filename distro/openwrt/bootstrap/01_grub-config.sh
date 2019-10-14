@@ -34,23 +34,24 @@ exec /tmp/grub-probe $@
 EOF
 chmod +x /usr/sbin/grub-probe
 
-# Disable UEFT: /etc/grub.d/30_uefi-firmware
-echo "" > /etc/grub.d/30_uefi-firmware
-
-# Fake blkid, grub-mkconfig setroot need this
-mkdir -p /dev/disk/by-uuid/$MAIN_UUID
-
-# Generate
-cat > /etc/default/grub <<"EOF"
-GRUB_DEFAULT=0
-GRUB_TIMEOUT=5
-GRUB_TIMEOUT_STYLE=menu
-GRUB_DISTRIBUTOR=OpenWrt
-GRUB_TERMINAL_INPUT=console
-GRUB_TERMINAL_OUTPUT=console
-GRUB_CMDLINE_LINUX="rootfstype=ext4 rootwait console=tty0 console=ttyS0,115200n8 noinitrd"
-EOF
-
 mkdir -p $TARGET_DIR/boot/grub
-grub-mkconfig -o $TARGET_DIR/boot/grub/grub.cfg
-grub-install --no-floppy --root-directory=$TARGET_DIR --boot-directory=$TARGET_DIR/boot /dev/xvda
+grub-install --no-floppy --modules="part_msdos" \
+   --root-directory=$TARGET_DIR --boot-directory=$TARGET_DIR/boot /dev/xvda
+
+PARTUUID=`get_partuuid`
+cat > $TARGET_DIR/boot/grub/grub.cfg <<EOF
+serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1 --rtscts=off
+terminal_input console serial; terminal_output console serial
+
+set default="0"
+set timeout="5"
+set root='(hd0,msdos1)'
+
+menuentry "OpenWrt" {
+	#linux /boot/vmlinuz root=$PARTUUID rootfstype=ext4 rootwait console=tty0 console=ttyS0,115200n8 noinitrd
+  linux /boot/vmlinuz root=/dev/sda1 rootfstype=ext4 rootwait console=tty0 console=ttyS0,115200n8 noinitrd
+}
+menuentry "OpenWrt (failsafe)" {
+	linux /boot/vmlinuz failsafe=true root=$PARTUUID rootfstype=ext4 rootwait console=tty0 console=ttyS0,115200n8 noinitrd
+}
+EOF

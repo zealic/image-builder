@@ -30,6 +30,11 @@ DEVID=${DEVID:-7}
 LOOP_DEV=/dev/loop$(($DEVID+1))
 NBD_DEV=/dev/nbd$DEVID
 
+get_partuuid() {
+  local ptuuid=`blkid | grep $NBD_DEV | awk '{print $2}' | sed 's/"//g'`
+  echo "${ptuuid#*=}"
+}
+
 # Load devices
 losetup -D
 if [[ ! -e /dev/loop$DEVID ]]; then

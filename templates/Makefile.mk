@@ -1,7 +1,7 @@
 {{ $distro := (ds "distro") -}}
 {{ $pipelines := ($distro.pipelines | coll.Sort "order") -}}
 COMPOSE=docker-compose -f {{ $distro.dirs.spec }}/compose.yml
-QEMU=qemu-system-x86_64 -smp 2 -m 512
+QEMU=qemu-system-x86_64 -smp 2 -m 512 -vnc :0
 
 exec:
 	{{- $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) }}
