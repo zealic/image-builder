@@ -54,6 +54,9 @@ services:
       {{- if $pipeline.chroot }}
       CHROOT: "1"
       {{- end }}
+      {{- if coll.Has $pipeline "shell" }}
+      CHROOT_SHELL: "{{ $pipeline.shell }}"
+      {{- end }}
       IMAGE_FILE: pipeline.{{ $pipeline.name }}.qcow2
   {{- end }}
 {{- end }}

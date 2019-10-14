@@ -26,7 +26,7 @@ if [[ -e $JOB_FILE ]]; then
     source $JOB_FILE
   else # chroot run
     cp $JOB_FILE $TARGET_DIR/tmp/$PIPELINE_JOB.sh
-    chroot $TARGET_DIR bash /tmp/$PIPELINE_JOB.sh
+    chroot $TARGET_DIR $CHROOT_SHELL /tmp/$PIPELINE_JOB.sh
     rm $TARGET_DIR/tmp/$PIPELINE_JOB.sh
   fi
 fi

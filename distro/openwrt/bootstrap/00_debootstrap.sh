@@ -9,5 +9,5 @@ OPENWRT_URL=https://downloads.openwrt.org/snapshots/targets/x86/64/openwrt-x86-6
 VMLINUZ_URL=https://downloads.openwrt.org/snapshots/targets/x86/64/openwrt-x86-64-vmlinuz
 
 mkdir -p $TARGET_DIR/boot
-curl -sSL $OPENWRT_URL | tar -C $TARGET_DIR -xvzf -
+curl -sSL $OPENWRT_URL | tar -C $TARGET_DIR -xvzf - > /dev/null
 curl -sSL -o $TARGET_DIR/boot/vmlinuz $VMLINUZ_URL
