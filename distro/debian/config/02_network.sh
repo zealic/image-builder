@@ -3,36 +3,55 @@ apt-get install -yq \
   net-tools iputils-ping dnsutils traceroute \
   telnet tcpdump
 
-cat >> /etc/systemd/network/10-dhcp.network <<EOF
+NETDIR=/etc/systemd/network
+cat > $NETDIR/br-lan.netdev <<EOF
+[NetDev]
+Name=br-lan
+Kind=bridge
+EOF
+
+cat > $NETDIR/br-lan-dhcp.network <<EOF
+# If want use static address only, remove this file
 [Match]
-Name=eth*
+Name=br-lan
 
 [Network]
-DHCP=ipv4
 IPForward=ipv4
 LinkLocalAddressing=no
 IPv6AcceptRA=no
+DHCP=ipv4
 
 [DHCP]
 ClientIdentifier=mac
 UseDomains=true
 
+# With static address
 [Address]
-#Label=eth0:0
-#Address=10.0.11.100/16
+Address=10.0.11.64/16
 EOF
 
-cat >> /etc/systemd/network/20-static-address.network <<EOF
+cat > $NETDIR/br-lan-static.network <<EOF
+# If want use static address only, remove DHCP file
+[Match]
+Name=br-lan
+
+[Network]
+IPForward=ipv4
+LinkLocalAddressing=no
+IPv6AcceptRA=no
+Gateway=10.0.0.1
+DNS=10.0.0.1
+
+[Address]
+Address=10.0.11.64/16
+EOF
+
+cat > $NETDIR/br-lan-eth.network <<EOF
 [Match]
 Name=eth*
 
 [Network]
-Gateway=10.0.0.1
-DNS=10.0.0.1
-IPForward=ipv4
-
-[Address]
-Address=10.0.22.33/16
+Bridge=br-lan
 EOF
 
 systemctl enable systemd-networkd
