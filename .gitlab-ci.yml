@@ -10,12 +10,11 @@ variables:
 
 
 stages:
-  - builder
   - build
 
 
 builder-debian:
-  stage: builder
+  stage: build
   rules:
     - changes:
         - distro/debian/Dockerfile
