@@ -42,3 +42,32 @@ distro-debian:
     - make debian:build
     - make debian:artifacts
     - make debian:artifacts-upload
+
+builder-openwrt:
+  stage: build
+  rules:
+    - changes:
+        - distro/openwrt/Dockerfile
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - when: manual
+  script:
+    - make openwrt:builder
+    - make openwrt:builder-push
+
+distro-openwrt:
+  stage: build
+  tags:
+    - nbd
+  rules:
+    - changes:
+        - distro/openwrt/**/*
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - when: manual
+  script:
+    - make openwrt:build
+    - make openwrt:artifacts
+    - make openwrt:artifacts-upload
