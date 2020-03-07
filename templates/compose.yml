@@ -33,6 +33,7 @@ services:
     <<: *base
     environment:
       DISTRO_NAME: {{ $distro.name }}
+      DEVID: {{ $distro.devid }}
       PIPELINE_NAME: {{ $pipeline.name }}
       {{- if eq $pn 0 }}
       ROOT_PIPELINE: "1"
@@ -48,6 +49,7 @@ services:
     <<: *base
     environment:
       DISTRO_NAME: {{ $distro.name }}
+      DEVID: {{ $distro.devid }}
       MIRROR_HOST: {{ index $distro.mirrors $distro.name }}
       PIPELINE_NAME: {{ $pipeline.name }}
       PIPELINE_JOB: {{ $name }}
@@ -70,6 +72,7 @@ services:
     <<: *base
     environment:
       DISTRO_NAME: {{ $distro.name }}
+      DEVID: {{ $distro.devid }}
       {{- $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) }}
       IMAGE_FILE: pipeline.{{ $lastPipeline.name }}.qcow2
       TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.vmdk
@@ -81,6 +84,7 @@ services:
     <<: *base
     environment:
       DISTRO_NAME: {{ $distro.name }}
+      DEVID: {{ $distro.devid }}
       IMAGE_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.vmdk
       TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.ova
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
@@ -91,6 +95,7 @@ services:
     <<: *base
     environment:
       DISTRO_NAME: {{ $distro.name }}
+      DEVID: {{ $distro.devid }}
       TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.ova
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
     command:

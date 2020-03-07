@@ -16,6 +16,13 @@ if [[ ! -d "${DISTRO_DIR}" ]] || [[ "${DISTRO_NAME}" == "common" ]]; then
   echo "Invalid distro name '${DISTRO_NAME}'"
   exit 1
 fi
+if [[ "${DISTRO_NAME}" == "debian" ]]; then
+  DEVID=11
+elif  [[ "${DISTRO_NAME}" == "openwrt" ]]; then
+  DEVID=12
+else
+  DEVID=1
+fi
 
 # Select mirrors by country
 COUNTRY=$(curl -sSL ifconfig.co/country)
@@ -32,6 +39,7 @@ esac
 FILE_DISTRO=$SPEC_DIR/distro.yml
 cat > $FILE_DISTRO <<EOF
 name: "$DISTRO_NAME"
+devid: "$DEVID"
 builder: "${CI_REGISTRY_IMAGE}:builder-${DISTRO_NAME}"
 mirrors:
   debian: ${DEBIAN_MIRROR}

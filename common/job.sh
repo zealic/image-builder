@@ -39,5 +39,5 @@ if [[ -d $TARGET_DIR ]]; then
   umount $TARGET_DIR
 fi
 
-losetup -D
+losetup -d $LOOP_DEV
 qemu-nbd -d $NBD_DEV > /dev/null

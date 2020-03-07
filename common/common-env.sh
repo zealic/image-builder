@@ -26,8 +26,9 @@ if [[ "$MAIN_UUID" == "" ]]; then
 fi
 
 # Device
-DEVID=${DEVID:-7}
-LOOP_DEV=/dev/loop$(($DEVID+1))
+# drivers/block/nbd.c defined 'static unsigned int nbds_max = 16'
+DEVID=${DEVID:-$(($RANDOM % 16))}
+LOOP_DEV=/dev/loop$DEVID
 NBD_DEV=/dev/nbd$DEVID
 
 get_partuuid() {
@@ -36,13 +37,13 @@ get_partuuid() {
 }
 
 # Load devices
-losetup -D
-if [[ ! -e /dev/loop$DEVID ]]; then
-  mknod /dev/loop$DEVID b 7 $DEVID
-fi
 if [[ ! -e $LOOP_DEV ]]; then
   mknod $LOOP_DEV b 7 $DEVID
 fi
 if [[ ! -e $NBD_DEV ]]; then
   mknod $NBD_DEV -m660 b 43 $DEVID
+fi
+
+if [[ -e $LOOP_DEV ]]; then
+  losetup -d $LOOP_DEV 2> /dev/null
 fi
