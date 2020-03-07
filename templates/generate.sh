@@ -70,5 +70,7 @@ done
 
 # Execute generate
 echo Generating $DISTRO_NAME configuration...
-gomplate -d distro=${FILE_DISTRO} \
-    --input-dir=${TEMPLATE_DIR} --output-dir=${SPEC_DIR}
+docker run -it --rm \
+  -v "$PWD/${TEMPLATE_DIR}:/input" -v "$PWD/${SPEC_DIR}:/spec" \
+  hairyhenderson/gomplate:v3 \
+    -d distro=/spec/distro.yml --input-dir=/input --output-dir=/spec
