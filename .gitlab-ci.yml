@@ -15,7 +15,7 @@ stages:
 
 
 builder-debian:
-  stage: build
+  stage: builder
   rules:
     - changes:
         - distro/debian/Dockerfile
