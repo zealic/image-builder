@@ -37,4 +37,7 @@ make openwrt:artifacts
 
 
 ## TODO
-Use systemd-container to replace chroot.
+
+* Use guestmount to replace qemu-nbd, direct use vmdk
+
+https://github.com/jtvd78/install-custom-centos

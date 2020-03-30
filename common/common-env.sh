@@ -26,7 +26,7 @@ if [[ "$MAIN_UUID" == "" ]]; then
 fi
 
 # Device
-# drivers/block/nbd.c defined 'static unsigned int nbds_max = 16'
+# drivers/block/nbd.c need 'mobprobe nbds_max=16'
 DEVID=${DEVID:-$(($RANDOM % 16))}
 LOOP_DEV=/dev/loop$DEVID
 NBD_DEV=/dev/nbd$DEVID

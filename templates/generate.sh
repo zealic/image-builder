@@ -16,7 +16,10 @@ if [[ ! -d "${DISTRO_DIR}" ]] || [[ "${DISTRO_NAME}" == "common" ]]; then
   echo "Invalid distro name '${DISTRO_NAME}'"
   exit 1
 fi
-if [[ "${DISTRO_NAME}" == "debian" ]]; then
+
+if [[ "${DISTRO_NAME}" == "centos" ]]; then
+  DEVID=10
+elif [[ "${DISTRO_NAME}" == "debian" ]]; then
   DEVID=11
 elif  [[ "${DISTRO_NAME}" == "openwrt" ]]; then
   DEVID=12

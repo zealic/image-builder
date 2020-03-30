@@ -5,9 +5,9 @@ ln -sf $LOOP_DEV /dev/xvda1
 #===============================================================================
 # Generate grub.cfg
 #===============================================================================
-# Hook grub-probe to generate args
-mv /usr/sbin/grub-probe /tmp/grub-probe
-cat > /usr/sbin/grub-probe <<"EOF"
+# Hook grub-probe2 to generate args
+mv /usr/sbin/grub2-probe /tmp/grub2-probe
+cat > /usr/sbin/grub2-probe <<"EOF"
 #!/bin/bash
 XVDAP1=/dev/xvda1
 if [[ "$1" == '--device' ]] && [[ "$2" == "$XVDAP1" ]]; then
@@ -30,9 +30,9 @@ if [[ "$1" == '--target=device' ]]; then
   esac
 fi
 
-exec /tmp/grub-probe $@
+exec /tmp/grub2-probe $@
 EOF
-chmod +x /usr/sbin/grub-probe
+chmod +x /usr/sbin/grub2-probe
 
 # Disable UEFT: /etc/grub.d/30_uefi-firmware
 echo "" > /etc/grub.d/30_uefi-firmware
@@ -45,10 +45,10 @@ cat > /etc/default/grub <<"EOF"
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=0
 GRUB_TIMEOUT_STYLE=menu
-GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
+GRUB_DISTRIBUTOR=`sed 's, release .*$,,g' /etc/system-release || echo CentOS`
 GRUB_TERMINAL_INPUT=console
 GRUB_TERMINAL_OUTPUT=console
 GRUB_CMDLINE_LINUX="biosdevname=0 net.ifnames=0 console=ttyS0,38400n8d console=tty0 consoleblank=0 elevator=noop scsi_mod.use_blk_mq=Y"
 EOF
-grub-mkconfig -o $TARGET_DIR/boot/grub/grub.cfg
-grub-install --boot-directory=/mnt/target/boot --modules="part_msdos" /dev/xvda
+grub2-mkconfig -o $TARGET_DIR/boot/grub2/grub.cfg
+grub2-install --boot-directory=$TARGET_DIR/boot --modules="part_msdos" /dev/xvda
