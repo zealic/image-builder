@@ -1,0 +1,28 @@
+name: centos-builder
+on:
+  push:
+    paths:
+      - 'distro/centos/Dockerfile'
+    schedule:
+      - cron: '0 0 1 * *'
+
+env:
+  CI_REGISTRY: docker.pkg.github.com
+  CI_PROJECT_NAMESPACE: ${{ github.repository }}
+  CI_PROJECT_NAME: builder
+
+jobs:
+  builder-debian:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    - uses: azure/docker-login@v1
+      with:
+        login-server: docker.pkg.github.com
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: build-and-push-builder-image
+      run: |
+        make centos:builder
+        make centos:builder-push

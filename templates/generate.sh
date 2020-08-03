@@ -43,7 +43,7 @@ FILE_DISTRO=$SPEC_DIR/distro.yml
 cat > $FILE_DISTRO <<EOF
 name: "$DISTRO_NAME"
 devid: "$DEVID"
-builder: "${CI_REGISTRY_IMAGE}:builder-${DISTRO_NAME}"
+builder: "${CI_REGISTRY_IMAGE}:${DISTRO_NAME}"
 mirrors:
   debian: ${DEBIAN_MIRROR}
 dirs:

@@ -1,3 +1,4 @@
 /artifacts
 /.*
 !/.gitlab-ci.yml
+!/.github

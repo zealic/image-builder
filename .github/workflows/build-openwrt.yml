@@ -1,0 +1,42 @@
+name: openwrt
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/*-openwrt.yml'
+      - 'common/**'
+      - 'templates/**'
+      - 'distro/openwrt/**'
+    schedule:
+      - cron: '0 8 1 * *'
+
+env:
+  CI_REGISTRY: docker.pkg.github.com
+  CI_PROJECT_NAMESPACE: ${{ github.repository }}
+  CI_PROJECT_NAME: builder
+
+jobs:
+  build-artifacts:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    - uses: azure/docker-login@v1
+      with:
+        login-server: docker.pkg.github.com
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: build-artifacts
+      run: |
+        # nbd driver is required
+        sudo modprobe nbd
+        make openwrt:build
+        make openwrt:artifacts
+        sudo chmod 444 artifacts/*
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      if: ${{ env.GITHUB_EVENT_NAME == 'schedule' }}
+      with:
+        name: openwrt-artifact
+        path: artifacts/openwrt.ova
