@@ -1,1 +1,1 @@
-opkg install luci
+opkg install luci luci-theme-bootstrap
