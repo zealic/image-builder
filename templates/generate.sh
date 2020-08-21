@@ -7,7 +7,7 @@ DISKS_DIR=$SPEC_DIR/disks
 ARTIFACTS_DIR=artifacts
 CI_PROJECT_NAMESPACE=${CI_PROJECT_NAMESPACE:-zealic}
 CI_PROJECT_NAME=${CI_PROJECT_NAME:-$(basename ${PWD})}
-CI_REGISTRY=${CI_REGISTRY:-registry.gitlab.com}
+CI_REGISTRY=${CI_REGISTRY:-docker.pkg.github.com}
 CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE:-${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}}
 
 # Check disto
@@ -43,7 +43,7 @@ FILE_DISTRO=$SPEC_DIR/distro.yml
 cat > $FILE_DISTRO <<EOF
 name: "$DISTRO_NAME"
 devid: "$DEVID"
-builder: "${CI_REGISTRY_IMAGE}:${DISTRO_NAME}"
+builder: "${CI_REGISTRY_IMAGE}/builder:${DISTRO_NAME}"
 mirrors:
   debian: ${DEBIAN_MIRROR}
 dirs:

@@ -13,8 +13,6 @@ on:
 
 env:
   CI_REGISTRY: docker.pkg.github.com
-  CI_PROJECT_NAMESPACE: ${{ github.repository }}
-  CI_PROJECT_NAME: builder
 
 jobs:
   build-artifacts:

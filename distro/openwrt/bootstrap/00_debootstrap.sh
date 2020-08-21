@@ -2,7 +2,7 @@
 #===============================================================================
 # debootstrap install
 #===============================================================================
-OPENWRT_VER=19.07.0
+OPENWRT_VER=19.07.3
 OPENWRT_URL=https://downloads.openwrt.org/releases/${OPENWRT_VER}/targets/x86/64/openwrt-${OPENWRT_VER}-x86-64-generic-rootfs.tar.gz
 VMLINUZ_URL=https://downloads.openwrt.org/releases/${OPENWRT_VER}/targets/x86/64/openwrt-${OPENWRT_VER}-x86-64-vmlinuz
 OPENWRT_URL=https://downloads.openwrt.org/snapshots/targets/x86/64/openwrt-x86-64-rootfs.tar.gz
