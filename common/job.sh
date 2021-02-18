@@ -7,7 +7,7 @@ source /scripts/common/common-env.sh
 # Load and mount device
 qemu-nbd -t -c $NBD_DEV ${IMAGE_FILE}
 PART_SEC_COUNT=$(fdisk -l $NBD_DEV | grep ${NBD_DEV}p1 | awk '{ print $5}')
-losetup -o $SYSIMG_SIZE --sizelimit $((PART_SEC_COUNT*512)) $LOOP_DEV $NBD_DEV
+losetup -o $SYSIMG_SIZE --sizelimit $((PART_SEC_COUNT*512)) $LOOP_DEV $NBD_DEV || exit 1
 if [[ ! -d $TARGET_DIR ]]; then
   mkdir -p $TARGET_DIR
 fi
