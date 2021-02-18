@@ -6,8 +6,8 @@ RUN export MAIN_DEPS="curl grub2-pc qemu-img parted uuid kmod" \
   && yum clean all
 
 # TODO: use another url.
-ENV OVFTOOL_VER=4.3.0-7948156
-ENV OVFTOOL_URL=https://raw.githubusercontent.com/smarunich/avitoolbox/master/files/VMware-ovftool-${OVFTOOL_VER}-lin.x86_64.bundle
+ENV OVFTOOL_VER=4.4.0-16360108
+ENV OVFTOOL_URL=https://stsharedservices.blob.core.windows.net/pub/ovftool/VMware-ovftool-${OVFTOOL_VER}-lin.x86_64.bundle
 RUN curl -sSL ${OVFTOOL_URL} > /tmp/ovftool.bundle \
   && chmod +x /tmp/ovftool.bundle \
   && echo -n "\n" | /tmp/ovftool.bundle --eulas-agreed \
