@@ -4,12 +4,13 @@ on:
     branches:
       - master
     paths:
+      - '!distro/debian/Dockerfile'
       - '.github/workflows/*-debian.yml'
       - 'common/**'
       - 'templates/**'
       - 'distro/debian/**'
-    schedule:
-      - cron: '0 8 1 * *'
+  schedule:
+    - cron: '0 8 1 * *'
 
 env:
   CI_REGISTRY: docker.pkg.github.com
