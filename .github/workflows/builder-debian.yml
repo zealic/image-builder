@@ -3,8 +3,8 @@ on:
   push:
     paths:
       - 'distro/debian/Dockerfile'
-    schedule:
-      - cron: '0 0 1 * *'
+  schedule:
+    - cron: '0 0 1 * *'
 
 env:
   CI_REGISTRY: docker.pkg.github.com
