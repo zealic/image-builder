@@ -7,7 +7,18 @@ source /scripts/common/common-env.sh
 # Load and mount device
 qemu-nbd -t -c $NBD_DEV ${IMAGE_FILE}
 PART_SEC_COUNT=$(fdisk -l $NBD_DEV | grep ${NBD_DEV}p1 | awk '{ print $5}')
-losetup -o $SYSIMG_SIZE --sizelimit $((PART_SEC_COUNT*512)) $LOOP_DEV $NBD_DEV || exit 1
+
+# Retry X time when below error:
+#   failed to set up loop device: Resource temporarily unavailable
+n=0
+until [ "$n" -ge 3 ]
+do
+   losetup -o $SYSIMG_SIZE --sizelimit $((PART_SEC_COUNT*512)) $LOOP_DEV $NBD_DEV && break
+   n=$((n+1)) 
+   sleep 10
+done
+
+# Mount device
 if [[ ! -d $TARGET_DIR ]]; then
   mkdir -p $TARGET_DIR
 fi
