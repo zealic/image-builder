@@ -15,6 +15,9 @@ if [[ "$1" == '--device' ]] && [[ "$2" == "$XVDAP1" ]]; then
     x--target=partmap)
       echo "msdos"
       exit 0;;
+    x--target=partuuid)
+      echo `get_partuuid`
+      exit 0;;
   esac
   :
 fi
@@ -39,6 +42,9 @@ echo "" > /etc/grub.d/30_uefi-firmware
 
 # Fake blkid, grub-mkconfig setroot need this
 mkdir -p /dev/disk/by-uuid/$MAIN_UUID
+
+# Fake kernel for grub2-mkconfig
+cp $TARGET_DIR/boot/*.* /boot
 
 # Generate
 cat > /etc/default/grub <<"EOF"
