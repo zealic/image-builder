@@ -35,7 +35,7 @@ jobs:
         sudo chmod 444 artifacts/*
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
-      if: ${{ env.GITHUB_EVENT_NAME == 'schedule' }}
+      if: github.event_name == 'schedule'
       with:
         name: openwrt-artifact
         path: artifacts/openwrt.ova
