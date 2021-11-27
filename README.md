@@ -35,6 +35,9 @@ make openwrt:artifacts
   You need run docker as privileged mode 
   and enable **nbd** kernel module on your host `modprobe nbd`.
 
+* Why no keyboard input to OpenWRT QEMU VNC connection?  
+  Use TigerVNC.
+  See also: https://stackoverflow.com/questions/32382961/no-keyboard-input-to-vm-condoles-via-vnc-connection-to-virt-manager-debian-jess
 
 ## TODO
 

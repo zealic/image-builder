@@ -1,2 +1,2 @@
 # Install docker
-opkg install docker-ce --force-postinstall
+opkg install dockerd docker docker-compose --force-postinstall
