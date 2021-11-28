@@ -38,9 +38,22 @@ case $COUNTRY in
     ;;
 esac
 
+gen_pipeline() {
+  local name=$1
+  local dir=distro/${DISTRO_NAME}/$1
 
-FILE_DISTRO=$SPEC_DIR/distro.yml
-cat > $FILE_DISTRO <<EOF
+  if [[ ! -e $dir/@metadata.yml ]]; then
+    return
+  fi
+  echo "  - name: $name"
+  cat $dir/@metadata.yml | sed 's/^/    /'
+  echo -e "\n    items:"
+  find $dir -type f -name '*.sh' \
+    | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}'
+}
+
+make_spec(){
+  cat <<EOF
 name: "$DISTRO_NAME"
 devid: "$DEVID"
 builder: "${CI_REGISTRY_IMAGE}/builder:${DISTRO_NAME}"
@@ -53,24 +66,12 @@ dirs:
 pipelines:
 EOF
 
-gen_pipeline() {
-  local name=$1
-  local dir=distro/${DISTRO_NAME}/$1
-
-  if [[ ! -e $dir/@metadata.yml ]]; then
-    return
-  fi
-  echo "  - name: $name" >> $FILE_DISTRO
-  cat $dir/@metadata.yml | sed 's/^/    /' >> $FILE_DISTRO
-  echo -e "\n    items:" >> $FILE_DISTRO
-  find $dir -type f -name '*.sh' \
-    | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}' >> $FILE_DISTRO
+  for pipeline in distro/${DISTRO_NAME}/*; do
+    gen_pipeline $(basename $pipeline)
+  done
 }
 
-for pipeline in distro/${DISTRO_NAME}/*; do
-  gen_pipeline $(basename $pipeline)
-done
-
+make_spec > $SPEC_DIR/distro.yml
 # Execute generate
 echo Generating $DISTRO_NAME configuration...
 docker run -i --rm \

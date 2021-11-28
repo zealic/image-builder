@@ -28,3 +28,4 @@ echo Generating ova...
 # Best performance building in container dir
 ovftool ${DISTRO_NAME}.vmx /${DISTRO_NAME}.ova
 mv /${DISTRO_NAME}.ova /$TARGET_FILE
+chmod 644 /$TARGET_FILE
