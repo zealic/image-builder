@@ -1,4 +1,5 @@
 opkg update
-opkg install ShadowVPN luci-app-shadowvpn
-opkg install shadowsocks-libev-server simple-obfs-server
-opkg install luci-app-ocserv ocserv openconnect luci-proto-openconnect
+opkg install luci-app-wireguard
+opkg install ShadowVPN luci-app-shadowvpn luci-compat
+opkg install shadowsocks-libev-server
+opkg install luci-app-ocserv luci-proto-openconnect
