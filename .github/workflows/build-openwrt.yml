@@ -33,9 +33,9 @@ jobs:
         # nbd driver is required
         sudo modprobe nbd
         make openwrt:build openwrt:artifacts
-        make openwrt:build@client openwrt:artifacts@client
-        make openwrt:build@server openwrt:artifacts@server
-        make openwrt:build@docker openwrt:artifacts@docker
+        make openwrt:edition@client openwrt:artifacts@client
+        make openwrt:edition@server openwrt:artifacts@server
+        make openwrt:edition@docker openwrt:artifacts@docker
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
