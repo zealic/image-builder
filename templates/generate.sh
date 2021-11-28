@@ -39,14 +39,24 @@ case $COUNTRY in
 esac
 
 gen_pipeline() {
-  local name=$1
-  local dir=distro/${DISTRO_NAME}/$1
+  local dir=$1
+  local name=$(basename $dir)
 
   if [[ ! -e $dir/@metadata.yml ]]; then
     return
   fi
   echo "  - name: $name"
   cat $dir/@metadata.yml | sed 's/^/    /'
+  echo -e "\n    items:"
+  find $dir -type f -name '*.sh' \
+    | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}'
+}
+
+gen_edition() {
+  local dir=$1
+  local name=$(basename $dir)
+
+  echo "  - name: $name"
   echo -e "\n    items:"
   find $dir -type f -name '*.sh' \
     | xargs -I {} basename {} .sh | awk '{print "    - " "\"" $1 "\""}'
@@ -63,11 +73,16 @@ dirs:
   spec: "${SPEC_DIR}"
   artifacts: "${ARTIFACTS_DIR}"
   disks: "${DISKS_DIR}"
-pipelines:
 EOF
 
+  echo "pipelines:"
   for pipeline in distro/${DISTRO_NAME}/*; do
-    gen_pipeline $(basename $pipeline)
+    gen_pipeline $pipeline
+  done
+
+  echo "editions:"
+  for edition in distro/${DISTRO_NAME}/@edition/*; do
+    gen_edition $edition
   done
 }
 

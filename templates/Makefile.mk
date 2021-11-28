@@ -1,12 +1,12 @@
 {{ $distro := (ds "distro") -}}
 {{ $pipelines := ($distro.pipelines | coll.Sort "order") -}}
+{{ $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) -}}
 COMPOSE=docker-compose -f {{ $distro.dirs.spec }}/compose.yml
 QEMU=qemu-system-x86_64 -smp 2 -m 512 -vnc :0 \
 	-net nic,vlan=0,macaddr=52:54:00:12:34:22,model=e1000,addr=08 \
 	-net tap,ifname=tap-qemu,script=no,downscript=no
 
 exec:
-	{{- $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) }}
 	@cd {{ $distro.dirs.disks }}; qemu-img create -f qcow2 -b pipeline.{{ $lastPipeline.name }}.qcow2 exec.qcow2
 	$(QEMU) -hda {{ $distro.dirs.disks }}/exec.qcow2
 
@@ -27,12 +27,25 @@ builder-push:
 build: {{ range $pipelines }} build-{{ .name }}{{ end }}
 {{- range $pn, $pipeline := $pipelines }}
 {{- $items := $pipeline.items | coll.Sort }}
-build-{{ $pipeline.name }}: pipeline-{{ $pipeline.name }}{{ range $items }} {{ $pipeline.name }}-{{ .}}{{ end }}
-{{ $pipeline.name }}-%:
+build-{{ $pipeline.name }}: pipeline-{{ $pipeline.name }}{{ range $items }} job-{{ $pipeline.name }}-{{ .}}{{ end }}
+job-{{ $pipeline.name }}-%:
 	@$(COMPOSE) run --rm {{ $pipeline.name }}-$*
 {{- end }}
 pipeline-%:
 	@$(COMPOSE) run --rm pipeline-$*
+
+
+#===============================================================================
+# Editions
+editions:{{ range $distro.editions }} edition@{{ .name }}{{ end }}
+{{- range $n, $edition := $distro.editions }}
+job@{{ $edition.name }}:
+	@$(COMPOSE) run --rm edition-{{ $edition.name }}
+{{- $items := $edition.items | coll.Sort }}
+job@{{ $edition.name }}-%:
+	@$(COMPOSE) run --rm edition-{{ $edition.name }}-$*
+edition@{{ $edition.name }}: job@{{ $edition.name }}{{ range $items }} job@{{ $edition.name }}-{{ . }}{{ end }}
+{{- end }}
 
 
 #===============================================================================
@@ -47,3 +60,13 @@ artifact-ova:
 
 artifacts-upload:
 	@$(COMPOSE) run --rm artifact-ova-upload
+
+{{ range $distro.editions }}
+artifacts@{{ .name }}: artifact-vmdk@{{ .name }} artifact-ova@{{ .name }}
+
+artifact-vmdk@{{ .name }}:
+	@$(COMPOSE) run --rm artifact-vmdk.{{ .name }}
+
+artifact-ova@{{ .name }}:
+	@$(COMPOSE) run --rm artifact-ova.{{ .name }}
+{{- end }}

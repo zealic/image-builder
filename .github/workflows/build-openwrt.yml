@@ -32,12 +32,13 @@ jobs:
       run: |
         # nbd driver is required
         sudo modprobe nbd
-        make openwrt:build
-        make openwrt:artifacts
-        sudo chmod 444 artifacts/*
+        make openwrt:build openwrt:artifacts
+        make openwrt:build@client openwrt:artifacts@client
+        make openwrt:build@server openwrt:artifacts@server
+        make openwrt:build@docker openwrt:artifacts@docker
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
       with:
         name: openwrt-artifact
-        path: artifacts/openwrt.ova
+        path: artifacts/*.ova

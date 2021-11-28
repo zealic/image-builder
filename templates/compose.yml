@@ -1,5 +1,7 @@
 {{ $distro := (ds "distro") -}}
 {{ $pipelines := ($distro.pipelines | coll.Sort "order") -}}
+{{ $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) -}}
+{{ $editions := $distro.editions -}}
 version: "2.4"
 services:
   _base: &base
@@ -13,6 +15,9 @@ services:
       - $PWD/common:/scripts/common:ro
       {{- range $pipeline := $pipelines }}
       - $PWD/distro/{{ $distro.name }}/{{ $pipeline.name }}:/scripts/pipelines/{{ $pipeline.name }}:ro
+      {{- end }}
+      {{- range $edition := $editions }}
+      - $PWD/distro/{{ $distro.name }}/@edition/{{ $edition.name }}:/scripts/pipelines/@{{ $edition.name }}:ro
       {{- end }}
     working_dir: /workspace
     command:
@@ -65,6 +70,40 @@ services:
   {{- end }}
 {{- end }}
 
+#===============================================================================
+# Editions
+{{- range $pn, $edition := $editions }}
+  {{- $items := $edition.items | coll.Sort }}
+  #======================================
+  # Edition - {{ $edition.name }}
+  edition-{{ $edition.name }}:
+    <<: *base
+    environment:
+      DISTRO_NAME: {{ $distro.name }}
+      DEVID: {{ $distro.devid }}
+      PIPELINE_NAME: "@{{ $edition.name }}"
+      BASE_IMAGE: pipeline.{{ $lastPipeline.name }}.qcow2
+      IMAGE_FILE: edition.{{ $edition.name }}.qcow2
+    command:
+      - bash
+      -   /scripts/common/pipeline.sh
+  {{- range $n, $name := $items }}
+  edition-{{ $edition.name }}-{{ $name }}:
+    <<: *base
+    environment:
+      DISTRO_NAME: {{ $distro.name }}
+      DEVID: {{ $distro.devid }}
+      PIPELINE_NAME: "@{{ $edition.name }}"
+      PIPELINE_JOB: {{ $name }}
+      CHROOT: "1"
+      {{- if coll.Has $edition "shell" }}
+      CHROOT_SHELL: "{{ $edition.shell }}"
+      {{- else }}
+      CHROOT_SHELL: "sh"
+      {{- end }}
+      IMAGE_FILE: edition.{{ $edition.name }}.qcow2
+  {{- end }}
+{{- end }}
 
 #===============================================================================
 # artifacts
@@ -73,7 +112,6 @@ services:
     environment:
       DISTRO_NAME: {{ $distro.name }}
       DEVID: {{ $distro.devid }}
-      {{- $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) }}
       IMAGE_FILE: pipeline.{{ $lastPipeline.name }}.qcow2
       TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.vmdk
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
@@ -101,3 +139,30 @@ services:
     command:
       - bash
       -   /scripts/common/artifact-upload.sh
+
+{{- range $distro.editions }}
+#===============================================================================
+# artifacts@{{ .name }}
+  artifact-vmdk.{{ .name }}:
+    <<: *base
+    environment:
+      DISTRO_NAME: {{ $distro.name }}
+      DEVID: {{ $distro.devid }}
+      IMAGE_FILE: edition.{{ .name }}.qcow2
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}@{{ .name }}.vmdk
+      ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
+    command:
+      - bash
+      -   /scripts/common/artifact-vmdk.sh
+  artifact-ova.{{ .name }}:
+    <<: *base
+    environment:
+      DISTRO_NAME: {{ $distro.name }}
+      DEVID: {{ $distro.devid }}
+      IMAGE_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}@{{ .name }}.vmdk
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}@{{ .name }}.ova
+      ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
+    command:
+      - bash
+      -   /scripts/common/artifact-ova.sh
+{{- end }}
