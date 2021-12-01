@@ -11,6 +11,8 @@ on:
       - 'distro/debian/**'
   schedule:
     - cron: '0 8 1 * *'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 env:
   CI_REGISTRY: docker.pkg.github.com
@@ -35,7 +37,7 @@ jobs:
         sudo chmod 444 artifacts/*
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
-      if: github.event_name == 'schedule'
+      if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
       with:
         name: debian-artifact
         path: artifacts/debian.ova
