@@ -7,7 +7,7 @@ wget -O /tmp/simonsmh-dist.pub https://cdn.jsdelivr.net/gh/simonsmh/openwrt-dist
 opkg-key add /tmp/simonsmh-dist.pub
 
 cat > /etc/opkg/customfeeds.conf <<EOF
-src/gz openwrt_dist http://openwrt-dist.sourceforge.net/packages/base/x86_64/
+src/gz openwrt_dist http://openwrt-dist.sourceforge.net/packages/base/x86_64
 src/gz openwrt_dist_luci http://openwrt-dist.sourceforge.net/packages/luci
 src/gz simonsmh https://cdn.jsdelivr.net/gh/simonsmh/openwrt-dist@packages/x86/64
 EOF
