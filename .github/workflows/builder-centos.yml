@@ -2,6 +2,7 @@ name: centos-builder
 on:
   push:
     paths:
+      - '.github/workflows/builder-centos.yml'
       - 'distro/centos/Dockerfile'
   schedule:
     - cron: '0 0 1 * *'
@@ -10,7 +11,7 @@ env:
   CI_REGISTRY: docker.pkg.github.com
 
 jobs:
-  builder-debian:
+  make-builder:
     runs-on: ubuntu-20.04
     steps:
     - name: Check out repository
