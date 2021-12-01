@@ -4,6 +4,7 @@ on:
     branches:
       - master
     paths:
+      - '!.github/workflows/builder-*'
       - '!distro/openwrt/Dockerfile'
       - '.github/workflows/*-openwrt.yml'
       - 'common/**'

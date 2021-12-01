@@ -4,6 +4,7 @@ on:
     branches:
       - master
     paths:
+      - '!.github/workflows/builder-*'
       - '!distro/centos/Dockerfile'
       - '.github/workflows/*-centos.yml'
       - 'common/**'
