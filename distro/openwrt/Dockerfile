@@ -1,4 +1,4 @@
-FROM debian:10-slim
+FROM debian:11-slim
 ENV DEBIAN_FRONTEND=noninteractive
 RUN export MAIN_DEPS="curl grub-pc qemu-utils parted uuid-runtime kmod" \
   && apt-get update && apt-get install -yq ${MAIN_DEPS} \
