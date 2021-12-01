@@ -1,5 +1,5 @@
 # docker-compose
-COMPOSE_VER=1.28.3
+COMPOSE_VER=2.1.1
 COMPOSE_URL=https://github.com/docker/compose/releases/download/${COMPOSE_VER}/docker-compose-Linux-x86_64
 curl -sSL -o /usr/local/bin/docker-compose \
     "$COMPOSE_URL" \
@@ -8,7 +8,7 @@ curl -sSL -o /usr/local/bin/docker-compose \
 curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 
 cat > /etc/apt/sources.list.d/docker.list <<EOF
-deb [arch=amd64] https://download.docker.com/linux/debian buster stable
+deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable
 EOF
 
 # docker-ce

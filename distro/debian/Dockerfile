@@ -1,6 +1,6 @@
-FROM debian:10-slim
+FROM debian:11-slim
 ENV DEBIAN_FRONTEND=noninteractive
-RUN export MAIN_DEPS="curl grub-pc qemu-utils parted uuid-runtime kmod" \
+RUN export MAIN_DEPS="curl grub-pc qemu-utils parted fdisk uuid-runtime kmod" \
   && export IMG_DEPS="debootstrap linux-image-amd64" \
   && apt-get update && apt-get install -yq ${MAIN_DEPS} ${IMG_DEPS} \
   && apt-get clean && rm -rf /var/lib/apt/lists/*

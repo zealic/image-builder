@@ -4,7 +4,7 @@ cat >/etc/apt/sources.list.d/kubernetes.list <<EOF
 deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 
-KUBE_VER=1.20
+KUBE_VER=1.22
 apt-get update
 # for ipvs mode, nfs storage support
 apt-get install -y \
@@ -15,7 +15,7 @@ apt-mark hold kubelet kubeadm kubectl
 
 
 # helm
-HELM_VER=3.5
+HELM_VER=3.7
 curl -fsSL https://baltocdn.com/helm/signing.asc | apt-key add -
 cat >/etc/apt/sources.list.d/helm-stable-debian.list <<EOF
 deb https://baltocdn.com/helm/stable/debian/ all main
