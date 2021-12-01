@@ -80,10 +80,14 @@ EOF
     gen_pipeline $pipeline
   done
 
-  echo "editions:"
-  for edition in distro/${DISTRO_NAME}/@edition/*; do
-    gen_edition $edition
-  done
+  if [[ -d distro/${DISTRO_NAME}/@edition ]]; then
+    echo "editions:"
+    for edition in distro/${DISTRO_NAME}/@edition/*; do
+      gen_edition $edition
+    done
+  else
+    echo "editions: []"
+  fi
 }
 
 make_spec > $SPEC_DIR/distro.yml
