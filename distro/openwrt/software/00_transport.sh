@@ -1,6 +1,7 @@
 mkdir /var/lock
 
 # Use mirror
+ sed -i "s|downloads.openwrt.org|${OPENWRT_MIRROR}|g" /etc/opkg/distfeeds.conf
 #sed -i 's/downloads\.openwrt\.org/openwrt\.proxy\.ustclug\.org/g' /etc/opkg/distfeeds.conf
 
 # Use HTTPS source
