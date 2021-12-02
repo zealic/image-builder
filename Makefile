@@ -1,7 +1,8 @@
 .DEFAULT_GOAL:=debian:exec
 DISTRO_MAKE=make -f
-SPECS_DIR=.build/specs
-ARTIFACTS_DIR=artifacts
+BUILD_DIR=.build
+SPECS_DIR=$(BUILD_DIR)/specs
+ARTIFACTS_DIR=$(BUILD_DIR)artifacts
 
 %:
 	$(eval DISTRO_NAME:=$(firstword $(subst :, ,$*)))

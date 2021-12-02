@@ -42,4 +42,4 @@ jobs:
       if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
       with:
         name: openwrt-artifact
-        path: artifacts/*.ova
+        path: .build/artifacts/*.ova

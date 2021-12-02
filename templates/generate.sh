@@ -1,10 +1,11 @@
 #!/bin/bash
 DISTRO_NAME=${1:-debian}
 DISTRO_DIR=distro/${DISTRO_NAME}
-SPEC_DIR=.build/specs/${DISTRO_NAME}
+BUILD_DIR=.build
+SPEC_DIR=${BUILD_DIR}/specs/${DISTRO_NAME}
 TEMPLATE_DIR=templates
-DISKS_DIR=$SPEC_DIR/disks
-ARTIFACTS_DIR=artifacts
+DISKS_DIR=${SPEC_DIR}/disks
+ARTIFACTS_DIR=${BUILD_DIR}/artifacts
 CI_PROJECT_NAMESPACE=${CI_PROJECT_NAMESPACE:-zealic}
 CI_PROJECT_NAME=${CI_PROJECT_NAME:-$(basename ${PWD})}
 CI_REGISTRY=${CI_REGISTRY:-docker.pkg.github.com}

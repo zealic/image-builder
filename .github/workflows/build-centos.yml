@@ -35,10 +35,9 @@ jobs:
         sudo modprobe nbd
         make centos:build
         make centos:artifacts
-        sudo chmod 444 artifacts/*
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
       with:
         name: centos-artifact
-        path: artifacts/centos.ova
+        path: .build/artifacts/*.ova
