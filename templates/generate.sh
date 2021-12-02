@@ -15,6 +15,7 @@ CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE:-${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${
 DEBIAN_CODENAME=bullseye
 DEBIAN_VER=11
 OPENWRT_VER=21.02.1
+CENTOS_VER=8
 
 # Check disto
 mkdir -p "$SPEC_DIR"
@@ -70,11 +71,13 @@ make_env(){
 
 make_env_centos(){
   cat <<EOF
+  DISTRO_VER: "${CENTOS_VER}"
 EOF
 }
 
 make_env_centos_cn(){
   cat <<EOF
+  DISTRO_VER: "${CENTOS_VER}"
 EOF
 }
 
