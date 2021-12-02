@@ -116,9 +116,9 @@ services:
   {{- end }}
 {{- end }}
 
-{{- $fullname := $distro.name + $distro.environment.DISTRO_VER }}
+{{- $fullname := (print $distro.name "-" $distro.environment.DISTRO_VER) }}
 {{- if has $distro.environment "DISTRO_SUFFIX" }}
-{{-   $fullname += $distro.environment.DISTRO_SUFFIX }}
+{{-   $fullname = (print $fullname $distro.environment.DISTRO_SUFFIX) }}
 {{- end }}
 #===============================================================================
 # artifacts
