@@ -9,6 +9,6 @@ debootstrap --arch=amd64 --foreign \
     --variant=minbase \
     --components=main,contrib,nonfree \
     --include=linux-image-${LINUX_VERSION}-amd64,grub-pc \
-    bullseye ${TARGET_DIR} http://${MIRROR_HOST}/debian
+    ${DEBIAN_CODENAME} ${TARGET_DIR} http://${DEBIAN_MIRROR}/debian
 chroot $TARGET_DIR /debootstrap/debootstrap --second-stage
 chroot $TARGET_DIR apt clean

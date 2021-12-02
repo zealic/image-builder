@@ -1,6 +1,6 @@
 .DEFAULT_GOAL:=debian:exec
 DISTRO_MAKE=make -f
-SPECS_DIR=.specs
+SPECS_DIR=.build/specs
 ARTIFACTS_DIR=artifacts
 
 %:

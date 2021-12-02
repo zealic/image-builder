@@ -1,7 +1,7 @@
 # kubernetes
-curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+curl -fsSL "${KUBERNETES_KEY}" | apt-key add -
 cat >/etc/apt/sources.list.d/kubernetes.list <<EOF
-deb https://apt.kubernetes.io/ kubernetes-xenial main
+deb ${KUBERNETES_REPO} kubernetes-xenial main
 EOF
 
 KUBE_VER=1.22

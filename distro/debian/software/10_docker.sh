@@ -8,7 +8,7 @@ curl -sSL -o /usr/local/bin/docker-compose \
 curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 
 cat > /etc/apt/sources.list.d/docker.list <<EOF
-deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable
+deb [arch=amd64] https://download.docker.com/linux/debian ${DEBIAN_CODENAME} stable
 EOF
 
 # docker-ce

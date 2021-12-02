@@ -17,7 +17,7 @@ exec%:
 	$(QEMU) -hda {{ $distro.dirs.disks }}/exec.$(PIPELINE_NAME).qcow2
 
 builder:
-	@docker build -t {{ $distro.builder }} -f distro/{{ $distro.name }}/Dockerfile .
+	@docker build --build-arg DISTRO_VER={{ $distro.environment.DISTRO_VER}} -t {{ $distro.builder }} -f distro/{{ $distro.name }}/Dockerfile .
 
 builder-push:
 	@docker push {{ $distro.builder }}

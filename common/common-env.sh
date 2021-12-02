@@ -1,6 +1,5 @@
 #!/bin/bash
 export LANG=C.UTF-8
-MIRROR_HOST=${MIRROR_HOST:-http://deb.debian.org/debian/}
 # Directory
 WORKSPACE=/workspace
 TARGET_DIR=/mnt/target

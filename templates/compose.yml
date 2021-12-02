@@ -46,6 +46,9 @@ services:
       BASE_IMAGE: pipeline.{{ $prevPipeline.name }}.qcow2
       {{- end }}
       IMAGE_FILE: pipeline.{{ $pipeline.name }}.qcow2
+      {{- range $k, $v := $distro.environment }}
+      {{ $k }}: "{{ $v }}"
+      {{- end }}
     command:
       - bash
       -   /scripts/common/pipeline.sh
@@ -55,7 +58,6 @@ services:
     environment:
       DISTRO_NAME: {{ $distro.name }}
       DEVID: {{ $distro.devid }}
-      MIRROR_HOST: {{ index $distro.mirrors $distro.name }}
       PIPELINE_NAME: {{ $pipeline.name }}
       PIPELINE_JOB: {{ $name }}
       {{- if $pipeline.chroot }}
@@ -67,6 +69,9 @@ services:
       CHROOT_SHELL: "bash"
       {{- end }}
       IMAGE_FILE: pipeline.{{ $pipeline.name }}.qcow2
+      {{- range $k, $v := $distro.environment }}
+      {{ $k }}: "{{ $v }}"
+      {{- end }}
   {{- end }}
 {{- end }}
 
@@ -84,6 +89,9 @@ services:
       PIPELINE_NAME: "@{{ $edition.name }}"
       BASE_IMAGE: pipeline.{{ $lastPipeline.name }}.qcow2
       IMAGE_FILE: edition.{{ $edition.name }}.qcow2
+      {{- range $k, $v := $distro.environment }}
+      {{ $k }}: "{{ $v }}"
+      {{- end }}
     command:
       - bash
       -   /scripts/common/pipeline.sh
@@ -102,6 +110,9 @@ services:
       CHROOT_SHELL: "sh"
       {{- end }}
       IMAGE_FILE: edition.{{ $edition.name }}.qcow2
+      {{- range $k, $v := $distro.environment }}
+      {{ $k }}: "{{ $v }}"
+      {{- end }}
   {{- end }}
 {{- end }}
 
@@ -113,7 +124,7 @@ services:
       DISTRO_NAME: {{ $distro.name }}
       DEVID: {{ $distro.devid }}
       IMAGE_FILE: pipeline.{{ $lastPipeline.name }}.qcow2
-      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.vmdk
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}.vmdk
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
     command:
       - bash
@@ -123,8 +134,8 @@ services:
     environment:
       DISTRO_NAME: {{ $distro.name }}
       DEVID: {{ $distro.devid }}
-      IMAGE_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.vmdk
-      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.ova
+      IMAGE_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}.vmdk
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}.ova
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
     command:
       - bash
@@ -149,8 +160,11 @@ services:
       DISTRO_NAME: {{ $distro.name }}
       DEVID: {{ $distro.devid }}
       IMAGE_FILE: edition.{{ .name }}.qcow2
-      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}@{{ .name }}.vmdk
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}@{{ .name }}.vmdk
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
+      {{- range $k, $v := $distro.environment }}
+      {{ $k }}: "{{ $v }}"
+      {{- end }}
     command:
       - bash
       -   /scripts/common/artifact-vmdk.sh
@@ -159,9 +173,12 @@ services:
     environment:
       DISTRO_NAME: {{ $distro.name }}
       DEVID: {{ $distro.devid }}
-      IMAGE_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}@{{ .name }}.vmdk
-      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}@{{ .name }}.ova
+      IMAGE_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}@{{ .name }}.vmdk
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}@{{ .name }}.ova
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
+      {{- range $k, $v := $distro.environment }}
+      {{ $k }}: "{{ $v }}"
+      {{- end }}
     command:
       - bash
       -   /scripts/common/artifact-ova.sh

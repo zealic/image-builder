@@ -1,4 +1,5 @@
-FROM debian:11-slim
+ARG DISTRO_VER=11
+FROM debian:${DISTRO_VER}-slim
 ENV DEBIAN_FRONTEND=noninteractive
 RUN export MAIN_DEPS="curl grub-pc qemu-utils parted fdisk uuid-runtime kmod" \
   && export IMG_DEPS="debootstrap linux-image-amd64" \
