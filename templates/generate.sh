@@ -94,6 +94,7 @@ EOF
 make_env_debian_cn(){
   cat <<EOF
   DISTRO_VER: "${DEBIAN_VER}"
+  DISTRO_SUFFIX: "-cn"
   DEBIAN_CODENAME: "${DEBIAN_CODENAME}"
   DEBIAN_MIRROR: "mirrors.ustc.edu.cn"
   KUBERNETES_REPO: "https://mirrors.aliyun.com/kubernetes/apt/"
@@ -111,6 +112,7 @@ EOF
 make_env_openwrt_cn(){
   cat <<EOF
   DISTRO_VER: "${OPENWRT_VER}"
+  DISTRO_SUFFIX: "-cn"
   OPENWRT_MIRROR: "mirrors.ustc.edu.cn/openwrt"
 EOF
 }

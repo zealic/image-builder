@@ -116,6 +116,10 @@ services:
   {{- end }}
 {{- end }}
 
+{{- $fullname := $distro.name + $distro.environment.DISTRO_VER }}
+{{- if has $distro.environment "DISTRO_SUFFIX" }}
+{{-   $fullname += $distro.environment.DISTRO_SUFFIX }}
+{{- end }}
 #===============================================================================
 # artifacts
   artifact-vmdk:
@@ -124,7 +128,7 @@ services:
       DISTRO_NAME: {{ $distro.name }}
       DEVID: {{ $distro.devid }}
       IMAGE_FILE: pipeline.{{ $lastPipeline.name }}.qcow2
-      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}.vmdk
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $fullname }}.vmdk
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
     command:
       - bash
@@ -134,8 +138,8 @@ services:
     environment:
       DISTRO_NAME: {{ $distro.name }}
       DEVID: {{ $distro.devid }}
-      IMAGE_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}.vmdk
-      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}.ova
+      IMAGE_FILE: /{{ $distro.dirs.artifacts }}/{{ $fullname }}.vmdk
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $fullname }}.ova
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
     command:
       - bash
@@ -145,7 +149,7 @@ services:
     environment:
       DISTRO_NAME: {{ $distro.name }}
       DEVID: {{ $distro.devid }}
-      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}.ova
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $fullname }}.ova
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
     command:
       - bash
@@ -160,7 +164,7 @@ services:
       DISTRO_NAME: {{ $distro.name }}
       DEVID: {{ $distro.devid }}
       IMAGE_FILE: edition.{{ .name }}.qcow2
-      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}@{{ .name }}.vmdk
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $fullname }}@{{ .name }}.vmdk
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
       {{- range $k, $v := $distro.environment }}
       {{ $k }}: "{{ $v }}"
@@ -173,8 +177,8 @@ services:
     environment:
       DISTRO_NAME: {{ $distro.name }}
       DEVID: {{ $distro.devid }}
-      IMAGE_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}@{{ .name }}.vmdk
-      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $distro.name }}-{{ $distro.environment.DISTRO_VER }}@{{ .name }}.ova
+      IMAGE_FILE: /{{ $distro.dirs.artifacts }}/{{ $fullname }}@{{ .name }}.vmdk
+      TARGET_FILE: /{{ $distro.dirs.artifacts }}/{{ $fullname }}@{{ .name }}.ova
       ARTIFACT_DIR: /{{ $distro.dirs.artifacts }}
       {{- range $k, $v := $distro.environment }}
       {{ $k }}: "{{ $v }}"
