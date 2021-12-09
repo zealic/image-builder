@@ -16,4 +16,15 @@ DOCKER_VER=20.10
 apt-get update
 apt-get install -yq --no-install-recommends docker-ce=5:${DOCKER_VER}.*
 
+if [[ "$DISTRO_SUFFIX" == "-cn" ]]; then
+  cat > /etc/docker/daemon.json <<EOF
+{
+  "registry-mirrors": [
+    "http://hub-mirror.c.163.com",
+    "https://docker.mirrors.ustc.edu.cn"
+  ]
+}
+EOF
+fi
+
 systemctl enable docker
