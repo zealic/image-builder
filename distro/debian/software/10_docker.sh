@@ -1,6 +1,6 @@
 # docker-compose
-COMPOSE_VER=2.1.1
-COMPOSE_URL=https://github.com/docker/compose/releases/download/${COMPOSE_VER}/docker-compose-Linux-x86_64
+COMPOSE_VER=2.2.2
+COMPOSE_URL=https://github.com/docker/compose/releases/download/v${COMPOSE_VER}/docker-compose-darwin-x86_64
 curl -sSL -o /usr/local/bin/docker-compose \
     "$COMPOSE_URL" \
     && chmod +x /usr/local/bin/docker-compose
