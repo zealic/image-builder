@@ -4,13 +4,29 @@ apt-get install -yq \
   telnet tcpdump
 
 NETDIR=/etc/systemd/network
-cat > $NETDIR/br-lan.netdev <<EOF
+
+cat > $NETDIR/10-static.network <<EOF
+[Match]
+Name=eth0
+
+[Network]
+IPForward=ipv4
+LinkLocalAddressing=no
+IPv6AcceptRA=no
+Address=192.168.1.32/16
+Gateway=192.168.1.1
+DNS=192.168.1.1
+EOF
+
+EXAMPLE1=$NETDIR/br-lan.example
+mkdir -p $EXAMPLE1
+cat > $EXAMPLE1/br-lan.netdev <<EOF
 [NetDev]
 Name=br-lan
 Kind=bridge
 EOF
 
-cat > $NETDIR/br-lan-dhcp.network <<EOF
+cat > $EXAMPLE1/br-lan-dhcp.network <<EOF
 # If want use static address only, remove this file
 [Match]
 Name=br-lan
@@ -27,10 +43,10 @@ UseDomains=true
 
 # With static address
 [Address]
-Address=10.0.11.64/16
+Address=192.167.1.128/16
 EOF
 
-cat > $NETDIR/br-lan-static.network <<EOF
+cat > $EXAMPLE1/br-lan-static.network <<EOF
 # If want use static address only, remove DHCP file
 [Match]
 Name=br-lan
@@ -39,14 +55,12 @@ Name=br-lan
 IPForward=ipv4
 LinkLocalAddressing=no
 IPv6AcceptRA=no
-Gateway=10.0.0.1
-DNS=10.0.0.1
-
-[Address]
-Address=10.0.11.64/16
+Address=192.168.1.64/16
+Gateway=192.168.1.1
+DNS=192.168.1.1
 EOF
 
-cat > $NETDIR/br-lan-eth.network <<EOF
+cat > $EXAMPLE1/br-lan-eth.network <<EOF
 [Match]
 Name=eth*
 
