@@ -17,6 +17,7 @@ apt-get update
 apt-get install -yq --no-install-recommends docker-ce=5:${DOCKER_VER}.*
 
 if [[ "$DISTRO_SUFFIX" == "-cn" ]]; then
+  mkdir -p /etc/docker
   cat > /etc/docker/daemon.json <<EOF
 {
   "registry-mirrors": [

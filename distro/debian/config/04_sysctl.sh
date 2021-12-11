@@ -5,6 +5,10 @@ root hard nofile 65535
 * hard nofile 65535
 EOF
 
+cat > /etc/sysctl.d/20-swap.conf <<EOF
+vm.swappiness = 0
+EOF
+
 cat > /etc/sysctl.d/40-ip.conf <<EOF
 # Enable IPv4 IP forward
 net.ipv4.ip_forward = 1
