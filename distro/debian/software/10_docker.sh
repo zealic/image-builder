@@ -20,7 +20,6 @@ if [[ "$DISTRO_SUFFIX" == "-cn" ]]; then
   cat > /etc/docker/daemon.json <<EOF
 {
   "registry-mirrors": [
-    "http://hub-mirror.c.163.com",
     "https://docker.mirrors.ustc.edu.cn"
   ]
 }
