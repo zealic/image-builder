@@ -1,8 +1,7 @@
 # docker-compose
 COMPOSE_VER=2.2.2
-COMPOSE_URL=https://github.com/docker/compose/releases/download/v${COMPOSE_VER}/docker-compose-linuxa-x86_64
-curl -sSL -o /usr/local/bin/docker-compose \
-    "$COMPOSE_URL" \
+COMPOSE_URL=https://github.com/docker/compose/releases/download/v${COMPOSE_VER}/docker-compose-linux-x86_64
+curl -sSL -o /usr/local/bin/docker-compose "$COMPOSE_URL" \
     && chmod +x /usr/local/bin/docker-compose
 
 curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
