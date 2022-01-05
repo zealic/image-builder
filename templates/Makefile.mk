@@ -22,6 +22,9 @@ builder:
 builder-push:
 	@docker push {{ $distro.builder }}
 
+builder-pull:
+	@docker pull {{ $distro.builder }}
+
 #===============================================================================
 # Pipelines
 build: {{ range $pipelines }} build-{{ .name }}{{ end }}
