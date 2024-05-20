@@ -1,4 +1,5 @@
-FROM debian:11-slim
+ARG DISTRO_VER=12
+FROM debian:${DISTRO_VER}-slim
 ENV DEBIAN_FRONTEND=noninteractive
 RUN export MAIN_DEPS="curl grub-pc qemu-utils parted fdisk uuid-runtime kmod" \
   && apt-get update && apt-get install -yq ${MAIN_DEPS} \
