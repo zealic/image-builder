@@ -12,9 +12,9 @@ CI_REGISTRY=${CI_REGISTRY:-docker.pkg.github.com}
 CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE:-${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}}
 
 # Distro versions
-DEBIAN_CODENAME=bullseye
-DEBIAN_VER=11
-OPENWRT_VER=21.02.1
+DEBIAN_CODENAME=bookworm
+DEBIAN_VER=12
+OPENWRT_VER=23.05.3
 
 # Check disto
 mkdir -p "$SPEC_DIR"
@@ -25,7 +25,7 @@ fi
 
 if [[ "${DISTRO_NAME}" == "debian" ]]; then
   DEVID=11
-elif  [[ "${DISTRO_NAME}" == "openwrt" ]]; then
+elif [[ "${DISTRO_NAME}" == "openwrt" ]]; then
   DEVID=12
 else
   DEVID=1
