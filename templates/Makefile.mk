@@ -1,7 +1,7 @@
 {{ $distro := (ds "distro") -}}
 {{ $pipelines := ($distro.pipelines | coll.Sort "order") -}}
 {{ $lastPipeline := (index $pipelines (math.Sub (len $pipelines) 1)) -}}
-COMPOSE=docker-compose -f {{ $distro.dirs.spec }}/compose.yml
+COMPOSE=docker compose -f {{ $distro.dirs.spec }}/compose.yml
 QEMU=qemu-system-x86_64 -smp 2 -m 512 -vnc :0 \
 	-net nic,vlan=0,macaddr=52:54:00:12:34:22,model=e1000,addr=08 \
 	-net tap,ifname=tap-qemu,script=no,downscript=no
