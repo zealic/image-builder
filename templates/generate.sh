@@ -15,7 +15,6 @@ CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE:-${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${
 DEBIAN_CODENAME=bullseye
 DEBIAN_VER=11
 OPENWRT_VER=21.02.1
-CENTOS_VER=8
 
 # Check disto
 mkdir -p "$SPEC_DIR"
@@ -24,9 +23,7 @@ if [[ ! -d "${DISTRO_DIR}" ]] || [[ "${DISTRO_NAME}" == "common" ]]; then
   exit 1
 fi
 
-if [[ "${DISTRO_NAME}" == "centos" ]]; then
-  DEVID=10
-elif [[ "${DISTRO_NAME}" == "debian" ]]; then
+if [[ "${DISTRO_NAME}" == "debian" ]]; then
   DEVID=11
 elif  [[ "${DISTRO_NAME}" == "openwrt" ]]; then
   DEVID=12
@@ -67,18 +64,6 @@ make_env(){
   else
     make_env_${DISTRO_NAME}
   fi
-}
-
-make_env_centos(){
-  cat <<EOF
-  DISTRO_VER: "${CENTOS_VER}"
-EOF
-}
-
-make_env_centos_cn(){
-  cat <<EOF
-  DISTRO_VER: "${CENTOS_VER}"
-EOF
 }
 
 make_env_debian(){
