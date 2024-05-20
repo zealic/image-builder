@@ -5,9 +5,6 @@ COMPOSE_VER=2.27.0
 COMPOSE_URL=https://github.com/docker/compose/releases/download/v${COMPOSE_VER}/docker-compose-linux-x86_64
 curl -sSL -o /usr/local/bin/docker-compose "$COMPOSE_URL" \
     && chmod +x /usr/local/bin/docker-compose
-# cli-plugins support，eg: `docker compose`
-mkdir -p /usr/local/lib/docker/cli-plugins
-cp /usr/local/bin/docker-compose  /usr/local/lib/docker/cli-plugins/
 
 ###########################################################
 # docker-ce
@@ -23,7 +20,10 @@ echo \
   $(. /etc/os-release && echo "$DEBIAN_CODENAME") stable" | \
   tee /etc/apt/sources.list.d/docker.list > /dev/null
 apt-get update
-apt-get install -yq --no-install-recommends docker-ce=5:${DOCKER_VER}.*
+# docker-ce and plugins
+apt-get install -yq --no-install-recommends \
+  docker-ce=5:${DOCKER_VER}.* \
+  docker-compose-plugin
 
 if [[ "$DISTRO_SUFFIX" == "-cn" ]]; then
   mkdir -p /etc/docker
