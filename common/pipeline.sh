@@ -10,7 +10,7 @@ echo "##########################################################################
 ########################################
 if [[ -z "$ROOT_PIPELINE" ]]; then
   # Snapshot
-  qemu-img create -f qcow2 -b ${BASE_IMAGE} ${IMAGE_FILE}
+  qemu-img create -f qcow2 -b ${BASE_IMAGE} -F qcow2 ${IMAGE_FILE}
   exit
 fi
 
